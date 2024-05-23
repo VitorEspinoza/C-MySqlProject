@@ -23,6 +23,7 @@ Propriedade setPropriedade(char nome[50], char tipo[10], char valor[50]){
 
 	return P;
 }
+
 const int create(char tabela[50], int numPropriedades, ...) {
     char scriptSQL[500]; 
     sprintf(scriptSQL, "INSERT INTO %s (", tabela);

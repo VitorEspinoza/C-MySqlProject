@@ -9,33 +9,33 @@
 // Resto do seu código aqui
 char HOST[] = "localhost";
 char USER[] = "root";
-char PASS[] = "csharppass31";
+char PASS[] = "BancodeDados11@10";
 MYSQL* mySqlInstance;
 
 
 int initMySqlConnection() {
-		
-	bool ProgramIsOpened = 1;
-	int answer;
-	
-	char* consult;
-	char* sentence;
-	char sentence_aux[200];
-	
-	if(!(mySqlInstance = mysql_init(0)))
-	{
-        printf("ERROR: Não foi possível criar o objeto MySQL.\n");
-    	return 0;
-	}
 
-	if(!mysql_real_connect(mySqlInstance, HOST, USER, PASS, "bankfinaltrab", 3306, NULL, 0))
-	{
-		printf("ERROR: Alguma informação do banco de dados está incorreta ou não existe.\n");
+    bool ProgramIsOpened = 1;
+    int answer;
+
+    char* consult;
+    char* sentence;
+    char sentence_aux[200];
+
+    if(!(mySqlInstance = mysql_init(0)))
+    {
+        printf("ERROR: Não foi possível criar o objeto MySQL.\n");
         return 0;
-	}
-		 
-	return 1;
-		
+    }
+
+    if(!mysql_real_connect(mySqlInstance, HOST, USER, PASS, "banco", 3306, NULL, 0))
+    {
+        printf("ERROR: Alguma informação do banco de dados está incorreta ou não existe.\n");
+        return 0;
+    }
+
+    return 1;
+
 
 }
 

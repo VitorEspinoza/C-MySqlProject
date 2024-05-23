@@ -1,9 +1,13 @@
-#include "agencia.h"
+#ifndef CONTA_H
+#define CONTA_H
 
-struct Conta {
-    int numeroConta;
+
+typedef struct {
+	int numeroConta;
     double saldo;
-    struct Agencia codigoAgencia;
-    char nomeGerente[40];
-    Cliente cliente;
-};
+    int numAgencia;
+    char cpfCliente[12];
+	char senha[255]; 
+} Conta;
+
+#endif 
