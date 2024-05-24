@@ -93,6 +93,50 @@ const int create(char tabela[50], int numPropriedades, ...) {
     return success;
 }
 
+typedef void (*filler_func)(void*, MYSQL_ROW);
+
+void** readAll(char tableName[50], filler_func fill, size_t structSize) {
+    char scriptSQL[500];
+    sprintf(scriptSQL, "SELECT * FROM %s;", tableName);
+
+    void** array = NULL;
+    int count = 0;
+
+    if (mySqlInstance == NULL) {
+        printf("ERROR: mySqlInstance é NULL\n");
+        return NULL;
+    }
+
+    if (mysql_ping(mySqlInstance)) {
+        printf("ERROR: Impossível conectar.\n");
+        printf("%s\n", mysql_error(mySqlInstance));
+        return NULL;
+    }
+
+
+    if (mysql_query(mySqlInstance, scriptSQL) == 0) {
+        MYSQL_RES *result = mysql_store_result(mySqlInstance);
+
+        if (result) {
+            MYSQL_ROW row;
+
+            while ((row = mysql_fetch_row(result))) {
+                array = realloc(array, (count + 1) * sizeof(void*));
+                array[count] = malloc(structSize);
+                fill(array[count], row);
+
+                count++;
+            }
+            mysql_free_result(result);
+        } else {
+            printf("Erro ao obter resultados: %s\n", mysql_error(mySqlInstance));
+        }
+    } else {
+        printf("Erro na consulta: %s\n", mysql_error(mySqlInstance));
+    }
+
+    return array;
+}
 
 #endif
 
