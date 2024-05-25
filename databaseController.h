@@ -23,6 +23,9 @@ Propriedade setPropriedade(char nome[50], char tipo[10], char valor[50]){
 
 	return P;
 }
+
+MYSQL_RES *result;
+
 const int create(char tabela[50], int numPropriedades, ...) {
     char scriptSQL[500]; 
     sprintf(scriptSQL, "INSERT INTO %s (", tabela);
@@ -137,6 +140,33 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize) {
 
     return array;
 }
+
+MYSQL_ROW readByField(char tabela[50], Propriedade field)
+{
+	char scriptSQL[500];
+	
+	sprintf(scriptSQL, "SELECT* FROM %s WHERE %s = %s;", tabela, field.Nome, field.Valor); 
+	
+	 if (mysql_query(mySqlInstance, scriptSQL) == 0) {
+       result = mysql_store_result(mySqlInstance);
+        if (result) {
+            MYSQL_ROW row;
+            while ((row = mysql_fetch_row(result))) 
+               return row;
+        } else {
+            fprintf(stderr, "Erro ao obter resultados: %s\n", mysql_error(mySqlInstance));
+        }
+    } else {
+        fprintf(stderr, "Erro na consulta: %s\n", mysql_error(mySqlInstance));
+    }
+	
+}
+
+clearResult() {
+	mysql_free_result(result);
+}
+
+
 
 #endif
 
