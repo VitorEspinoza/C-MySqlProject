@@ -210,5 +210,31 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
 
 
 
+int deleteRegister(char tabela[50], Propriedade identifierField) {
+	char scriptSQL[500];
+		
+	char* format = returnAttribution(identifierField);
+	char whereClause[50];
+	sprintf(whereClause, format, identifierField.Nome, identifierField.Valor);
+
+	sprintf(scriptSQL, "DELETE FROM %s WHERE %s;", tabela, whereClause);
+	int success = 0;
+    if (mysql_ping(mySqlInstance)) {
+        printf("ERROR: Impossível conectar.\n");
+        printf("%s\n", mysql_error(mySqlInstance));
+    }
+
+    if (mysql_query(mySqlInstance, scriptSQL)) {
+        printf("ERROR: %s\n", mysql_error(mySqlInstance));
+        rewind(stdin);
+        getchar();
+    } else {
+        printf("\nInformações excluidas corretamente.\n");
+        success = 1;
+    }
+
+    
+    return success;
+}
 #endif
 
