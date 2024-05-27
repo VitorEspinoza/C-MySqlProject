@@ -36,3 +36,18 @@ int createConta(Conta conta) {
 	
 	return success;
 }
+
+Conta readContaByField(Propriedade propriedade) {
+	MYSQL_ROW row = readByField("conta", propriedade);
+	
+	Conta conta;
+	
+	conta.numeroConta = atoi(row[0]);
+	conta.saldo = atof(row[1]);
+	conta.numAgencia = atoi(row[2]);
+	strcpy(conta.cpfCliente, row[3]);
+	
+	clearResult();
+	return conta;
+
+}

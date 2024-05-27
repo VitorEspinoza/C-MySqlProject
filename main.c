@@ -9,6 +9,7 @@
 void telaInicial();
 void cadastroCliente();
 void cadastroConta(Cliente cliente);
+void telaConta(cpf);
 void telaDeposito(Conta conta);
 void telaSaque(Conta conta);
 void telaTransacao(Conta conta);
@@ -103,6 +104,7 @@ void cadastroConta(Cliente cliente) {
 	if(success) {
 		system("cls");
 		printf("Conta cadastrada com sucesso.");
+		telaConta(conta.cpfCliente);
 	} else {
 		printf("DEU PAU");
 	}
@@ -110,12 +112,17 @@ void cadastroConta(Cliente cliente) {
 }
 
 
-void telaConta(Conta conta) {
+void telaConta(cpf) {
     int escolha;
-
+    
+    system("cls");
+    Propriedade cpfProp = setPropriedade("FK_Cliente_CPF", "string", cpf);
+	Conta conta = readContaByField(cpfProp);
+	
     do {
         // Exibir informações da conta
         printf("\n--- Tela Inicial ---\n");
+        printf("Número da Agencia: %d\n", conta.numAgencia);
         printf("Número da Conta: %d\n", conta.numeroConta);
         printf("Saldo: R$ %.2f\n", conta.saldo);
         printf("\nOpções:\n");
