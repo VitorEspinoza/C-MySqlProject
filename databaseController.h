@@ -60,7 +60,17 @@ const int create(char tabela[50], int numPropriedades, ...) {
     sprintf(scriptSQL + strlen(scriptSQL), ") VALUES (");
 
     for (i = 0; i < numPropriedades; ++i) {
-       sprintf(scriptSQL + strlen(scriptSQL), "%s", propriedadesArray[i].Valor);
+    	
+    	
+	char format[20];
+    if (propertieIsNumber(prop)) {
+       	strcpy(format, "%s");
+    } 
+    else {
+    	strcpy(format, "'%s'");
+	}
+	
+       sprintf(scriptSQL + strlen(scriptSQL), format, propriedadesArray[i].Valor);
 		const isLastItem = i == numPropriedades - 1;
         if (!isLastItem) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
@@ -207,8 +217,6 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
     
     return success;
 }
-
-
 
 int deleteRegister(char tabela[50], Propriedade identifierField) {
 	char scriptSQL[500];
