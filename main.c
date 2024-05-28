@@ -1,22 +1,32 @@
 #include <locale.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "cliente.h"
 #include "databaseConnection.h"
 #include "clienteController.h"
 #include "conta.h"
+#include "generalScreens.h"
+#include "clientScreens.h"
+#include "consoleUtils.h"
 
-void telaInicial();
+
+
+
 void cadastroConta();
 void telaDeposito(struct Conta *conta);
 void telaSaque(struct Conta *conta);
 void telaTransacao(struct Conta *conta);
 void setLocale();
+
+
 int main() {
 	setLocale();
 	const connectionMySqlSuceed = initMySqlConnection();
 	if(!connectionMySqlSuceed)
-	printf('fim');
-
+	printf("fim");
+	initHConsole();
+	setDefaultColorTextConsole();
     telaInicial();
 
     return 0;
@@ -25,63 +35,6 @@ int main() {
 void setLocale() {
 	setlocale(LC_ALL, "Portuguese");
 }
-
-
-void telaInicial() {
-	read();
-    printf("\n--- Tela Inicial ---\n");	
-	char resposta;
-	
-	printf("Você já tem uma conta? (S/N): ");
-	
-	do {
-    scanf(" %c", &resposta);
-		  if (resposta == 'S' || resposta == 's') {
-		  	printf("Bem-vindo! Faça login na sua conta.\n");
-	        // Aqui você pode adicionar a lógica para o login
-	    } else if (resposta == 'N' || resposta == 'n') {
-	       cadastroCliente();
-	    } else {
-	        printf("Opção inválida. Responda com S ou N.\n");
-	    }
-	}	while(resposta != "S" || resposta != "s" || resposta != "N" || resposta != "n");
-}
-
-void cadastroCliente() {
-	system("cls");
-	printf("\n--- Tela Cadastro de Cliente---\n");
-	
-	Cliente client; 
-	printf("Digite o CPF: ");
-    scanf("%11s", &client.cpf);
-
-    printf("Digite o RG: ");
-    scanf("%30s", &client.rg);
-
-    printf("Digite o nome: ");
-    scanf("%40s", &client.nome);
-
-    printf("Digite o endereço: ");
-    scanf("%40s", &client.endereco);
-
-    printf("Digite o telefone: ");
-    scanf("%11s", &client.telefone);
-
-    printf("Estado civil (0 - Solteiro, 1 - Casado): ");
-    scanf("%d", &client.estadoCivil);
-    
-    int success = createClient(client);
-    
-    if(success) {
-    	printf("Você foi adicionado como cliente, agora vamos ao cadastro da sua conta no nosso sistema:");
-    	
-	}
-	else{
-		printf("Ops, parece que houve algo de errado ao te cadastrar. Tente novamente mais tarde.");
-	}
-	
-}
-
 
 void telaConta(struct Conta *conta) {
     int escolha;
@@ -99,7 +52,6 @@ void telaConta(struct Conta *conta) {
         printf("Escolha uma opção: ");
         scanf("%d", &escolha);
 
-        // Executar a ação correspondente à escolha do usuário
         switch (escolha) {
             case 1:
                 telaDeposito(conta);
