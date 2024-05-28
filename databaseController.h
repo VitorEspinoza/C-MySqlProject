@@ -25,7 +25,7 @@ Propriedade setPropriedade(char nome[50], char tipo[10], char valor[50]){
 }
 
 bool propertieIsNumber(Propriedade prop) {
-	const isNumber = prop.Tipo == "int" || prop.Tipo == "double";
+	bool isNumber = strcmp(prop.Tipo, "int") == 0 || strcmp(prop.Tipo, "double") == 0;
 	return isNumber;
 }
 
@@ -63,7 +63,7 @@ const int create(char tabela[50], int numPropriedades, ...) {
     	
     	
 	char format[20];
-    if (propertieIsNumber(prop)) {
+    if (propertieIsNumber(propriedadesArray[i])) {
        	strcpy(format, "%s");
     } 
     else {
@@ -77,11 +77,11 @@ const int create(char tabela[50], int numPropriedades, ...) {
         }
     }
 
+
     sprintf(scriptSQL + strlen(scriptSQL), ");\n");
 
     va_end(args);
-    
-  
+  	
   	int success = 0;
     if (mysql_ping(mySqlInstance)) {
         printf("ERROR: Impossível conectar.\n");
@@ -103,9 +103,14 @@ const int create(char tabela[50], int numPropriedades, ...) {
 
 typedef void (*filler_func)(void*, MYSQL_ROW);
 
-void** readAll(char tableName[50], filler_func fill, size_t structSize) {
+void** readAll(char tableName[50], filler_func fill, size_t structSize, char* whereClause) {
     char scriptSQL[500];
-    sprintf(scriptSQL, "SELECT * FROM %s;", tableName);
+    
+    if (whereClause[0] == '\0') {
+     	sprintf(scriptSQL, "SELECT * FROM %s;", tableName);
+	} else {
+     	sprintf(scriptSQL, "SELECT * FROM %s %s;", tableName, whereClause);
+	}
 
     void** array = NULL;
     int count = 0;
@@ -150,8 +155,14 @@ MYSQL_ROW readByField(char tabela[50], Propriedade field)
 {
 	char scriptSQL[500];
 	
-	sprintf(scriptSQL, "SELECT* FROM %s WHERE %s = %s;", tabela, field.Nome, field.Valor); 
 	
+	sprintf(scriptSQL, "SELECT * FROM %s", tabela);
+	
+ 	char* format = returnAttribution(field);
+	char whereClause[50];
+	sprintf(whereClause, " WHERE %s", format);
+    sprintf(scriptSQL + strlen(scriptSQL), whereClause, field.Nome, field.Valor);
+    
 	 if (mysql_query(mySqlInstance, scriptSQL) == 0) {
        result = mysql_store_result(mySqlInstance);
         if (result) {
@@ -200,7 +211,7 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
     sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Nome, identifierField.Valor);
 
 	int success = 0;
-	
+	printf("%s", scriptSQL);
     if (mysql_ping(mySqlInstance)) {
         printf("ERROR: Impossível conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
