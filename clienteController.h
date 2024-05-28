@@ -7,30 +7,28 @@
 void fillCliente(void* structToFill, MYSQL_ROW row);
 EstadoCivil stringToEstadoCivil(char* str);
 
+
+Propriedade* setPropriedadesCliente(Cliente client) {
+    char estadoCivilConvertido[10];
+    strcpy(estadoCivilConvertido, EstadoCivilToString(client.estadoCivil));
+
+    static Propriedade propriedades[7];
+
+    propriedades[0] = setPropriedade("rg", "string", client.rg);
+    propriedades[1] = setPropriedade("cpf", "string", client.cpf);
+    propriedades[2] = setPropriedade("nome", "string", client.nome);
+    propriedades[3] = setPropriedade("endereco", "string", client.endereco);
+    propriedades[4] = setPropriedade("telefone", "string", client.telefone);
+    propriedades[5] = setPropriedade("estadoCivil", "string", estadoCivilConvertido);
+
+    return propriedades;
+}
+
 int createClient(Cliente client) {
-
-	char estadoCivilConvertido[2];
-    itoa(client.estadoCivil, estadoCivilConvertido, 2);
-
-	Propriedade rgProp;
-    rgProp = setPropriedade("rg", "string", client.rg);
- 
- 	Propriedade cpfProp;
-    cpfProp = setPropriedade("cpf", "string", client.cpf);
-
-    Propriedade nomeProp;
-    nomeProp = setPropriedade("nome", "string", client.nome);
-
-    Propriedade enderecoProp;
-    enderecoProp = setPropriedade("endereco", "string", client.endereco);
-
-    Propriedade telefoneProp;
-    telefoneProp = setPropriedade("telefone", "string", client.telefone);
-
-    Propriedade estadoCivilProp;
-	estadoCivilProp =  setPropriedade("estadoCivil", "int", estadoCivilConvertido);
+	
+   	Propriedade* propriedades = setPropriedadesCliente(client);
   
-	int success = create("Cliente", 6, cpfProp, rgProp, nomeProp, enderecoProp, telefoneProp, estadoCivilProp);
+	int success = create("Cliente", 6, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4], propriedades[5]);
 
 	return success;
 }
@@ -38,7 +36,7 @@ int createClient(Cliente client) {
 
 Cliente** readAllClients() {
 
-	Cliente** clientes = (Cliente**)readAll("Cliente", fillCliente, sizeof(Cliente));
+	Cliente** clientes = (Cliente**)readAll("Cliente", fillCliente, sizeof(Cliente), "");
 	return clientes;
 }
 
@@ -58,24 +56,18 @@ void fillCliente(void* structToFill, MYSQL_ROW row) {
     if (row[5] != NULL) cliente->estadoCivil = stringToEstadoCivil(row[5]);
 }
 
-EstadoCivil stringToEstadoCivil(char* str) {
-    if (str == NULL) {
-        printf("Erro: str é NULL\n");
-        return Solteiro; 
-    }
-
-    if (strcmp(str, "SOLTEIRO") == 0) {
-        return Solteiro;
-    } else if (strcmp(str, "CASADO") == 0) {
-        return Casado;
-    }
-}
 
 Cliente readClientByField(Propriedade propriedade) {
 	MYSQL_ROW row = readByField("cliente", propriedade);
 	
+
 	Cliente cliente;
 	
+	if(row == NULL) {
+		strcpy(cliente.rg, "NULL");
+		clearResult();
+		return cliente;
+	}
 	strcpy(cliente.cpf, row[0]); 
 	strcpy(cliente.rg, row[1]); 
 	strcpy(cliente.nome, row[2]); 
@@ -88,28 +80,13 @@ Cliente readClientByField(Propriedade propriedade) {
 
 int updateClient(Cliente client, Propriedade identifierField) {
 	
-	char estadoCivilConvertido[2];
-    itoa(client.estadoCivil, estadoCivilConvertido, 2);
+	char estadoCivilConvertido[10];
+	strcpy(estadoCivilConvertido, EstadoCivilToString(client.estadoCivil));
+    
 
-	Propriedade rgProp;
-    rgProp = setPropriedade("rg", "string", client.rg);
- 
- 	Propriedade cpfProp;
-    cpfProp = setPropriedade("cpf", "string", client.cpf);
-
-    Propriedade nomeProp;
-    nomeProp = setPropriedade("nome", "string", client.nome);
-
-    Propriedade enderecoProp;
-    enderecoProp = setPropriedade("endereco", "string", client.endereco);
-
-    Propriedade telefoneProp;
-    telefoneProp = setPropriedade("telefone", "string", client.telefone);
-
-    Propriedade estadoCivilProp;
-	estadoCivilProp =  setPropriedade("estadoCivil", "int", estadoCivilConvertido);
+  	Propriedade* propriedades = setPropriedadesCliente(client);
   
-	int success = update("Cliente", identifierField, 6, cpfProp, rgProp, nomeProp, enderecoProp, telefoneProp, estadoCivilProp);
+	int success = update("Cliente", identifierField, 6, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4], propriedades[5]);
 	return success;
 }
 
