@@ -5,35 +5,36 @@
 #include "conta.h"
 #include "databaseController.h"
 
-int createConta(Conta conta) {
-	printf("testando\n");
-	
-	setlocale(LC_NUMERIC, "C");
+char* generateRandomNumber();
 
-	char numAgenciaConvertido[50];
-	sprintf(numAgenciaConvertido, "%d", conta.numAgencia);
-    printf("Numero agencia: %s\n", numAgenciaConvertido);
+Propriedade* setPropriedadesConta(Conta conta) {
+	
+    static Propriedade propriedades[5];
+	
+	char saldoConta[50];
+	sprintf(saldoConta, "%lf", conta.saldo);
+	
+    propriedades[0] = setPropriedade("fk_cliente_cpf", "string", conta.cpfCliente);
+    propriedades[1] = setPropriedade("codigoAgencia", "string", conta.numAgencia);
+    propriedades[2] = setPropriedade("saldo", "double", saldoConta);
+    propriedades[3] = setPropriedade("senha", "string", conta.senha);
+    propriedades[4] = setPropriedade("numeroConta", "string", conta.numeroConta);
+
+    return propriedades;
+}
+
+int createConta(Conta conta) {
+	
+	char randomNumber = generateRandomNumber();
+    strcpy(conta.numeroConta, randomNumber);
+    free(randomNumber);
     
-	Propriedade numAgenciaProp;
-	numAgenciaProp = setPropriedade("codigoAgencia", "int", numAgenciaConvertido);
+	Propriedade* propriedades = setPropriedadesConta(conta);
+	printf("testando");
 	
-	Propriedade cpfClienteProp;
-	cpfClienteProp = setPropriedade("FK_Cliente_CPF", "string", conta.cpfCliente);
-	printf("CPF: %s\n", cpfClienteProp.Valor);
+	int success = create("Conta", 5, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4]);
 	
-	char saldoCliente[50];
-	sprintf(saldoCliente, "%.2f", conta.saldo);
-	printf("saldoCliente: ");
-	printf("c%\n", saldoCliente);
-	
-	Propriedade saldoProp;
-	saldoProp = setPropriedade("saldo", "double", saldoCliente);
-	
-	Propriedade senhaProp;
-	senhaProp = setPropriedade("senha", "string", conta.senha);
-	
-	int success = create("Conta", 4, numAgenciaProp, cpfClienteProp, saldoProp, senhaProp);
-	
+	printf("depos");
 	return success;
 }
 
@@ -42,12 +43,28 @@ Conta readContaByField(Propriedade propriedade) {
 	
 	Conta conta;
 	
-	conta.numeroConta = atoi(row[0]);
+	strcpy(conta.numeroConta, row[0]);
 	conta.saldo = atof(row[1]);
-	conta.numAgencia = atoi(row[2]);
+	strcpy(conta.numAgencia, row[2]);
 	strcpy(conta.cpfCliente, row[3]);
 	
 	clearResult();
 	return conta;
 
+}
+
+char* generateRandomNumber() {
+    srand(time(NULL)); // Inicializa o gerador de números aleatórios
+
+    int number = rand() % 90000 + 10000; // Gera um número aleatório entre 10000 e 99999
+
+    char* str = malloc(6 * sizeof(char)); // Aloca memória para a string
+    if (str == NULL) {
+        printf("Erro ao alocar memória.\n");
+        exit(1);
+    }
+
+    sprintf(str, "%d", number); // Converte o número para uma string
+
+    return str; // Retorna a string
 }
