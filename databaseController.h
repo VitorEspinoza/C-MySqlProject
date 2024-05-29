@@ -84,7 +84,7 @@ const int create(char tabela[50], int numPropriedades, ...) {
   	
   	int success = 0;
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossível conectar.\n");
+        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 
@@ -93,7 +93,7 @@ const int create(char tabela[50], int numPropriedades, ...) {
         rewind(stdin);
         getchar();
     } else {
-        printf("Informações adicionadas corretamente.\n");
+        printf("Informaï¿½ï¿½es adicionadas corretamente.\n");
         success = 1;
     }
 
@@ -116,12 +116,12 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
     int count = 0;
 
     if (mySqlInstance == NULL) {
-        printf("ERROR: mySqlInstance é NULL\n");
+        printf("ERROR: mySqlInstance ï¿½ NULL\n");
         return NULL;
     }
 
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossível conectar.\n");
+        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
         return NULL;
     }
@@ -213,7 +213,7 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
 	int success = 0;
 	printf("%s", scriptSQL);
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossível conectar.\n");
+        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 
@@ -222,7 +222,7 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
         rewind(stdin);
         getchar();
     } else {
-        printf("Informações atualizadas corretamente.\n");
+        printf("Informaï¿½ï¿½es atualizadas corretamente.\n");
         success = 1;
     }
     
@@ -239,7 +239,7 @@ int deleteRegister(char tabela[50], Propriedade identifierField) {
 	sprintf(scriptSQL, "DELETE FROM %s WHERE %s;", tabela, whereClause);
 	int success = 0;
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossível conectar.\n");
+        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 
@@ -248,7 +248,7 @@ int deleteRegister(char tabela[50], Propriedade identifierField) {
         rewind(stdin);
         getchar();
     } else {
-        printf("\nInformações excluidas corretamente.\n");
+        printf("\nInformaï¿½ï¿½es excluidas corretamente.\n");
         success = 1;
     }
 

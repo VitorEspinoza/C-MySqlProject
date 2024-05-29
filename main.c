@@ -5,6 +5,7 @@
 #include "cliente.h"
 #include "databaseConnection.h"
 #include "clienteController.h"
+#include "contaController.h"
 #include "conta.h"
 #include "generalScreens.h"
 #include "clientScreens.h"
@@ -38,18 +39,23 @@ void setLocale() {
 
 void telaConta(struct Conta *conta) {
     int escolha;
-
+    
+    system("cls");
+    Propriedade cpfProp = setPropriedade("FK_Cliente_CPF", "string", cpf);
+	Conta conta = readContaByField(cpfProp);
+	
     do {
-        // Exibir informações da conta
+        // Exibir informaï¿½ï¿½es da conta
         printf("\n--- Tela Inicial ---\n");
-        printf("Número da Conta: %d\n", conta->numeroConta);
-        printf("Saldo: R$ %.2f\n", conta->saldo);
-        printf("\nOpções:\n");
+        printf("Nï¿½mero da Agencia: %d\n", conta.numAgencia);
+        printf("Nï¿½mero da Conta: %d\n", conta.numeroConta);
+        printf("Saldo: R$ %.2f\n", conta.saldo);
+        printf("\nOpï¿½ï¿½es:\n");
         printf("1. Depositar\n");
         printf("2. Sacar\n");
-        printf("3. Transação\n");
+        printf("3. Transaï¿½ï¿½o\n");
         printf("4. Sair\n");
-        printf("Escolha uma opção: ");
+        printf("Escolha uma opï¿½ï¿½o: ");
         scanf("%d", &escolha);
 
         switch (escolha) {
@@ -66,61 +72,60 @@ void telaConta(struct Conta *conta) {
                 printf("Saindo...\n");
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
         }
     } while (escolha != 4);
 }
 
-void telaDeposito(struct Conta *conta) {
+void telaDeposito(Conta conta) {
     float valor;
 
-    // Solicitar valor do depósito
-    printf("\n--- Tela de Depósito ---\n");
-    printf("Saldo atual: R$ %.2f\n", conta->saldo);
+    // Solicitar valor do depï¿½sito
+    printf("\n--- Tela de Depï¿½sito ---\n");
+    printf("Saldo atual: R$ %.2f\n", conta.saldo);
     printf("Digite o valor a ser depositado: R$ ");
     scanf("%f", &valor);
 
-    // Verificar valor válido
+    // Verificar valor vï¿½lido
     if (valor > 0) {
-        conta->saldo += valor;
-        printf("Depósito realizado com sucesso!\n");
-        printf("Novo saldo: R$ %.2f\n", conta->saldo);
+        conta.saldo += valor;
+        printf("Depï¿½sito realizado com sucesso!\n");
+        printf("Novo saldo: R$ %.2f\n", conta.saldo);
     } else {
-        printf("Valor inválido. Tente novamente.\n");
+        printf("Valor invï¿½lido. Tente novamente.\n");
     }
 }
 
-void telaSaque(struct Conta *conta) {
+void telaSaque(Conta conta) {
     float valor;
 
     // Solicitar valor do saque
     printf("\n--- Tela de Saque ---\n");
-    printf("Saldo atual: R$ %.2f\n", conta->saldo);
+    printf("Saldo atual: R$ %.2f\n", conta.saldo);
     printf("Digite o valor a ser sacado: R$ ");
     scanf("%f", &valor);
 
-    // Verificar se há saldo suficiente
-    if (valor > 0 && valor <= conta->saldo) {
-        conta->saldo -= valor;
+    // Verificar se hï¿½ saldo suficiente
+    if (valor > 0 && valor <= conta.saldo) {
+        conta.saldo -= valor;
         printf("Saque realizado com sucesso!\n");
-        printf("Novo saldo: R$ %.2f\n", conta->saldo);
+        printf("Novo saldo: R$ %.2f\n", conta.saldo);
     } else {
-        printf("Saldo insuficiente ou valor inválido. Tente novamente.\n");
+        printf("Saldo insuficiente ou valor invï¿½lido. Tente novamente.\n");
     }
 }
 
-void telaTransacao(struct Conta *conta) {
+void telaTransacao(Conta conta) {
     float valor;
 
-    // Solicitar valor da transação
-    printf("\n--- Tela de Transação ---\n");
-    printf("Saldo atual: R$ %.2f\n", conta->saldo);
-    printf("Digite o valor da transação: R$ ");
+    // Solicitar valor da transaï¿½ï¿½o
+    printf("\n--- Tela de Transaï¿½ï¿½o ---\n");
+    printf("Saldo atual: R$ %.2f\n", conta.saldo);
+    printf("Digite o valor da transaï¿½ï¿½o: R$ ");
     scanf("%f", &valor);
 
-    // Atualizar saldo com o valor da transação
-    conta->saldo += valor;
-    printf("Transação realizada com sucesso!\n");
-    printf("Novo saldo: R$ %.2f\n", conta->saldo);
+    // Atualizar saldo com o valor da transaï¿½ï¿½o
+    conta.saldo += valor;
+    printf("Transaï¿½ï¿½o realizada com sucesso!\n");
+    printf("Novo saldo: R$ %.2f\n", conta.saldo);
 }
-
