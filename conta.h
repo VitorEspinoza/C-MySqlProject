@@ -3,11 +3,11 @@
 
 
 typedef struct {
-	char numeroConta[255];
+	int numeroConta;
     double saldo;
-    char numAgencia[255];
+    int numAgencia;
     char cpfCliente[12];
 	char senha[255];
-} Conta;
+} Conta;
 
-#endif 
+#endif
