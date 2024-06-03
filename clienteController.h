@@ -35,8 +35,8 @@ int createClient(Cliente client) {
 
 
 Cliente** readAllClients() {
-
-	Cliente** clientes = (Cliente**)readAll("Cliente", fillCliente, sizeof(Cliente), "");
+	int numberOfRowsCliente;
+	Cliente** clientes = (Cliente**)readAll("Cliente", fillCliente, sizeof(Cliente), "", &(numberOfRowsCliente));
 	return clientes;
 }
 

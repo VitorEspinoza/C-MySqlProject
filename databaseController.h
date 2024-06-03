@@ -96,14 +96,13 @@ const int create(char tabela[50], int numPropriedades, ...) {
         printf("Informa��es adicionadas corretamente.\n");
         success = 1;
     }
-
-		                                                                         
+                                                                        
     return success;
 }
 
 typedef void (*filler_func)(void*, MYSQL_ROW);
 
-void** readAll(char tableName[50], filler_func fill, size_t structSize, char* whereClause) {
+void** readAll(char tableName[50], filler_func fill, size_t structSize, char* whereClause, int* numberOfRows) {
     char scriptSQL[500];
     
     if (whereClause[0] == '\0') {
@@ -140,6 +139,7 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
 
                 count++;
             }
+            *numberOfRows = count;
             mysql_free_result(result);
         } else {
             printf("Erro ao obter resultados: %s\n", mysql_error(mySqlInstance));
@@ -211,7 +211,7 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
     sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Nome, identifierField.Valor);
 
 	int success = 0;
-	printf("%s", scriptSQL);
+
     if (mysql_ping(mySqlInstance)) {
         printf("ERROR: Imposs�vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
