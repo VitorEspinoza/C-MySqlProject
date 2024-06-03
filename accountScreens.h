@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "configScreens.h"
+#include "transactionScreens.h"
 
 Conta account;
 
@@ -49,10 +50,9 @@ void createAccountScreen(Cliente client) {
 void infoAccountScreen() {
     int option;
 	setDefaultColorTextConsole();
-    system("cls");
-	
     do {
         // Exibir informações da conta
+		system("cls");
         printf("====================================\n");
     	printf("=             Menu Conta           =\n");
     	printf("====================================\n");
@@ -77,13 +77,13 @@ void infoAccountScreen() {
                 withdrawAccountScreen();
                 break;
             case 3:
-                printf("transacao");
+                transactionMenuScreen(&account);
                 break;
             case 4:
                 configMenuScreen(&account);
                 break;
             case 5:
-                printf("Saindo...\n");
+                telaInicial();
                 break;
             default:
                 printf("Opção inválida. Tente novamente.\n");
