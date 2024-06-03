@@ -2,10 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <time.h>
 #include "conta.h"
 #include "databaseController.h"
 
-char* generateRandomNumber();
+typedef struct {
+	int success;
+	Conta account;
+} ResponseAccount;
+
+char* randomFourDigitNumber();
+Conta readContaByField(Propriedade propriedade);
 
 Propriedade* setPropriedadesConta(Conta conta) {
 	
@@ -23,19 +30,36 @@ Propriedade* setPropriedadesConta(Conta conta) {
     return propriedades;
 }
 
-int createConta(Conta conta) {
+ResponseAccount createConta(Conta conta) {
 	
-	char randomNumber = generateRandomNumber();
-    strcpy(conta.numeroConta, randomNumber);
-    free(randomNumber);
+	char* generatedNumber;
+	Propriedade numAccountProp;
+	Conta existingAccount;
+	int isExist;
+	
+	do {
+		generatedNumber = randomFourDigitNumber();
+		numAccountProp = setPropriedade("numeroConta", "string", generatedNumber);
+		existingAccount = readContaByField(numAccountProp);
+		isExist = strcmp(existingAccount.cpfCliente, "NULL") != 0;
+		
+	} while(isExist);
+
+    strcpy(conta.numeroConta, generatedNumber);
+    free(generatedNumber);
     
 	Propriedade* propriedades = setPropriedadesConta(conta);
-	printf("testando");
+
 	
-	int success = create("Conta", 5, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4]);
+	ResponseAccount responseAccount;
+	responseAccount.success = create("Conta", 5, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4]);
 	
-	printf("depos");
-	return success;
+	responseAccount.account = conta;
+
+	clearBuffer();
+	getchar();
+	
+	return responseAccount;
 }
 
 Conta readContaByField(Propriedade propriedade) {
@@ -43,28 +67,52 @@ Conta readContaByField(Propriedade propriedade) {
 	
 	Conta conta;
 	
+	if(row == NULL) {
+		strcpy(conta.cpfCliente, "NULL");
+		clearResult();
+		return conta;
+	}
+	
 	strcpy(conta.numeroConta, row[0]);
 	conta.saldo = atof(row[1]);
 	strcpy(conta.numAgencia, row[2]);
 	strcpy(conta.cpfCliente, row[3]);
+	strcpy(conta.senha, row[4]);
 	
 	clearResult();
 	return conta;
 
 }
 
-char* generateRandomNumber() {
-    srand(time(NULL)); // Inicializa o gerador de números aleatórios
+ResponseAccount updateAccount(Conta account, Propriedade identifierField) {
 
-    int number = rand() % 90000 + 10000; // Gera um número aleatório entre 10000 e 99999
+  	Propriedade* propriedades = setPropriedadesConta(account);
+  	
+  	ResponseAccount responseAccount;
+	responseAccount.success = update("Conta", identifierField, 5, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4]);
+	
+	responseAccount.account = account;
+	
+	return responseAccount;
+}
 
-    char* str = malloc(6 * sizeof(char)); // Aloca memória para a string
+int deleteConta(Propriedade identifierField) {
+	int success = deleteRegister("conta", identifierField);
+	return success;
+}
+
+
+char* randomFourDigitNumber() {
+    srand(time(NULL));
+    int number = rand() % 9000 + 1000; 
+
+    char* str = malloc(5 * sizeof(char)); 
     if (str == NULL) {
         printf("Erro ao alocar memória.\n");
         exit(1);
     }
 
-    sprintf(str, "%d", number); // Converte o número para uma string
+    sprintf(str, "%d", number); 
 
-    return str; // Retorna a string
+    return str;
 }
