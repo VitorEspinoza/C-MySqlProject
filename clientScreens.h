@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "accountScreens.h"
 #define CPF_SIZE 12
 #define RG_SIZE 13
 #define NAME_SIZE 101
@@ -183,7 +184,7 @@ void clientInfoScreen(int haveData) {
 			
 			switch(option) {
 			    case 1:
-			        printf("fazer login.\n");
+			        loginOptionAccountScreen(client);	
 			        break;
 			    case 2:
 			        updateClientScreen();

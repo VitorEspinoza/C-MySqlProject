@@ -43,7 +43,7 @@ Cliente** readAllClients() {
 
 void fillCliente(void* structToFill, MYSQL_ROW row) {
     if (structToFill == NULL || row == NULL) {
-        printf("Erro: structToFill ou row é NULL\n");
+        printf("Erro: structToFill ou row ï¿½ NULL\n");
         return;
     }
 
