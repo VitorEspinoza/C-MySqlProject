@@ -50,15 +50,17 @@ void createAccountScreen(Cliente client) {
 void infoAccountScreen() {
     int option;
 	setDefaultColorTextConsole();
+	
+	system("cls");
+	printf("====================================\n");
+	printf("=             Menu Conta           =\n");
+	printf("====================================\n");
+	printf("Número da Agencia: %s\n", account.numAgencia);
+    printf("Número da Conta: %s\n", account.numeroConta);
+    printf("Saldo: R$ %.2f\n", account.saldo);
+        
     do {
         // Exibir informações da conta
-		system("cls");
-        printf("====================================\n");
-    	printf("=             Menu Conta           =\n");
-    	printf("====================================\n");
-        printf("Número da Agencia: %s\n", account.numAgencia);
-        printf("Número da Conta: %s\n", account.numeroConta);
-        printf("Saldo: R$ %.2f\n", account.saldo);
         printf("\nOpções:\n");
         printf("1. Depositar\n");
         printf("2. Sacar\n");
@@ -67,7 +69,7 @@ void infoAccountScreen() {
         printf("5. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &option);
-
+		getchar();
         // Executar a ação correspondente à escolha do usuário
         switch (option) {
             case 1:
@@ -83,25 +85,38 @@ void infoAccountScreen() {
                 configMenuScreen(&account);
                 break;
             case 5:
+            	system("cls");
                 telaInicial();
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+            	setErrorColorTextConsole();
+                printf("Opção inválida. Tente novamente.");
+                setDefaultColorTextConsole();
         }
     } while (option != 1 && option != 2 && option != 3 && option != 4 && option != 5);
 	
 }
 
 void depositAccountScreen() {
+	char str[100];
 	double value;
 	
 	system("cls");
-	printf("====================================\n");
+    printf("====================================\n");
     printf("=              Deposito            =\n");
     printf("====================================\n");
     printf("Saldo atual: R$%.2f\n", account.saldo);
     printf("Digite o quanto deseja depositar: R$");
-    scanf("%lf", &value);
+
+    scanf("%s", str);
+    while (!isNumber(str)) {
+    	setErrorColorTextConsole();
+        printf("Entrada inválida!\n");
+        setDefaultColorTextConsole();
+        printf("Por favor, digite um número: R$");
+        scanf("%s", str);
+    }
+    value = atof(str);
     
     account.saldo = account.saldo + value;
     
@@ -136,6 +151,7 @@ void depositAccountScreen() {
 
 void withdrawAccountScreen() {
 	double value;
+	char str[100];
 	
 	setDefaultColorTextConsole();
 	system("cls");
@@ -144,9 +160,18 @@ void withdrawAccountScreen() {
     printf("====================================\n");
     
     do { 
-		printf("Saldo atual: R$%.2f\n", account.saldo);
-	    printf("Digite o quanto deseja sacar: R$");
-	    scanf("%lf", &value);
+	    printf("Saldo atual: R$%.2f\n", account.saldo);
+	    printf("Digite o quanto deseja depositar: R$");
+	
+	    scanf("%s", str);
+	    while (!isNumber(str)) {
+	    	setErrorColorTextConsole();
+	        printf("Entrada inválida!\n");
+	        setDefaultColorTextConsole();
+	        printf("Por favor, digite um número: R$");
+	        scanf("%s", str);
+	    }
+	    value = atof(str);
 	    
 	    if (value > account.saldo){
 	    	system("cls");
@@ -198,19 +223,18 @@ void withdrawAccountScreen() {
 
 void loginOptionAccountScreen(Cliente client) {
 	system("cls");
-	int option;
+	int option;		
+	printf("====================================\n");
+	printf("=               Login              =\n");
+	printf("====================================\n");
+	printf("Já possui uma CONTA para logar?\n");
 	do {
-		printf("====================================\n");
-		printf("=               Login              =\n");
-		printf("====================================\n");
-		printf("Já possui uma CONTA para logar?\n");
+
 		printf("1. Sim\n2. Não\n");
 		printf("Digite sua escolha: ");
 		
 		scanf("%d", &option);
 		getchar();
-		
-		printf("%d", option);
 		
 		switch (option) {
 			case 1:
@@ -220,7 +244,9 @@ void loginOptionAccountScreen(Cliente client) {
 				createAccountScreen(client);
 				break;
 			default:
-				printf("Opção inválida. Tente novamente!\n");
+				setErrorColorTextConsole();
+                printf("Opção inválida. Tente novamente.\n");
+                setDefaultColorTextConsole();
 				break;
 		}
 	}
@@ -279,11 +305,15 @@ void loginAccountScreen(Cliente client) {
 				
 			} while (!success && attempts < 10);
 			
-			setErrorColorTextConsole();
-			printf("=====================================\n");
-			printf("=   Numero de tentativas excedido.  =\n");
-			printf("=    Tente novamente mais tarde.    =\n");
-			printf("=====================================\n");
+			if (attempts == 10) {
+				setErrorColorTextConsole();
+				printf("=====================================\n");
+				printf("=   Numero de tentativas excedido.  =\n");
+				printf("=    Tente novamente mais tarde.    =\n");
+				printf("=====================================\n");
+		    	setDefaultColorTextConsole();
+			}
+
 			
 		}
 	} while (isNumAccountNull);

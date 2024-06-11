@@ -193,8 +193,9 @@ void clientInfoScreen(int haveData) {
 			        deleteClientScreen(0);
 			        break;
 			    default:
-			        printf("Opção inválida. Tente novamente.\n");
-			        break;
+            	setErrorColorTextConsole();
+                printf("Opção inválida. Tente novamente.\n");
+                setDefaultColorTextConsole();
 			}
 		}
 	while(option != 1 && option != 2 && option != 3);
@@ -271,8 +272,9 @@ void updateClientScreen() {
                 printf("Finalizando...\n");
                 break;
             default:
+            	setErrorColorTextConsole();
                 printf("Opção inválida. Tente novamente.\n");
-                break;
+                setDefaultColorTextConsole();
         }
     } while(option != 7);
     system("cls");
@@ -368,7 +370,9 @@ void deleteClientScreen(int haveData) {
                 break;
            
             default:
+            	setErrorColorTextConsole();
                 printf("Opção inválida. Tente novamente.\n");
+                setDefaultColorTextConsole();
                 break;
         }
     } while(option != 1 && option != 2);
