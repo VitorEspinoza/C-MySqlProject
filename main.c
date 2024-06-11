@@ -19,7 +19,6 @@ void telaDeposito(struct Conta *conta);
 void telaSaque(struct Conta *conta);
 void telaTransacao(struct Conta *conta);
 void setLocale();
-int isNumber(char s[]);
 
 
 int main() {
@@ -37,21 +36,6 @@ int main() {
 void setLocale() {
 	setlocale(LC_ALL, "Portuguese");
 	setlocale(LC_NUMERIC, "C");
-}
-
-int isNumber(char s[]) {
-    int i, len = strlen(s);
-    int dotCount = 0;
-
-    for (i = 0; i < len; i++) {
-        if (s[i] == '.') {
-            dotCount++;
-            if (dotCount > 1) return 0;
-        } else if (!isdigit(s[i])) {
-            return 0;
-        }
-    }
-    return 1;
 }
 
 //void telaConta(struct Conta *conta) {
