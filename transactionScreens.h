@@ -6,6 +6,7 @@
 void transactionMenuScreen(Conta* account);
 void realizeTransaction(Conta* account);
 void consultBalance();
+int isDestinationAccountReal(char numDestinationAccount[100]);
 
 Transaction transaction;
 
@@ -74,8 +75,10 @@ void realizeTransaction(Conta* account) {
     isSufficientSaldo = transaction.quantia <= account->saldo;
     
     if (isSufficientSaldo) {
+    	
 		printf("Digite o numero da conta destino da transação: ");
 	    scanf("%s", &transaction.contaDestino);
+	    
 	    while (!isNumber(transaction.contaDestino)) {
 	    	setErrorColorTextConsole();
 	        printf("Entrada inválida!\n");
@@ -84,8 +87,17 @@ void realizeTransaction(Conta* account) {
 	        scanf("%s", &transaction.contaDestino);
 	    }
 	    
+	    while (!isDestinationAccountReal(transaction.contaDestino)) {
+	    	setErrorColorTextConsole();
+	        printf("Conta destino inexistente!\n");
+	        setDefaultColorTextConsole();
+	        printf("Por favor, um número de conta existente: ");
+	        scanf("%s", &transaction.contaDestino);
+	    }
+	    
 	    printf("Tipo pagamento (0 - Credito, 1 - Debito): ");
 		scanf("%d", &transaction.paymentType);
+		
 	    while (transaction.paymentType != 0 && transaction.paymentType != 1) {
 	    	setErrorColorTextConsole();
 	        printf("Entrada inválida!\n");
@@ -161,4 +173,16 @@ void consultBalance(Conta account){
 	if (option == 1){
 		infoAccountScreen();
 	}
+}
+
+int isDestinationAccountReal(char numDestinationAccount[100]) {
+	Propriedade numDestAccountProp = setPropriedade("numeroconta", "string", numDestinationAccount);
+	Conta destAccount = readContaByField(numDestAccountProp);
+	
+	int accountExist = strcmp(destAccount.cpfCliente, "NULL") != 0;
+
+	if (accountExist)
+		return 1;
+	 else 
+		return 0;
 }
