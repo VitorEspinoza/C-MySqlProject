@@ -48,12 +48,13 @@ void fillCliente(void* structToFill, MYSQL_ROW row) {
     }
 
     Cliente* cliente = (Cliente*)structToFill;
-    if (row[0] != NULL) strcpy(cliente->cpf, row[0]);
-    if (row[1] != NULL) strcpy(cliente->rg, row[1]);
-    if (row[2] != NULL) strcpy(cliente->nome, row[2]);
-    if (row[3] != NULL) strcpy(cliente->endereco, row[3]);
-    if (row[4] != NULL) strcpy(cliente->telefone, row[4]);
-    if (row[5] != NULL) cliente->estadoCivil = stringToEstadoCivil(row[5]);
+    if (row[0] != NULL) cliente->id = atoi(row[0]);
+    if (row[1] != NULL) strcpy(cliente->cpf, row[1]);
+    if (row[2] != NULL) strcpy(cliente->rg, row[2]);
+    if (row[3] != NULL) strcpy(cliente->nome, row[3]);
+    if (row[4] != NULL) strcpy(cliente->endereco, row[4]);
+    if (row[5] != NULL) strcpy(cliente->telefone, row[5]);
+    if (row[6] != NULL) cliente->estadoCivil = stringToEstadoCivil(row[6]);
 }
 
 
@@ -68,12 +69,14 @@ Cliente readClientByField(Propriedade propriedade) {
 		clearResult();
 		return cliente;
 	}
-	strcpy(cliente.cpf, row[0]); 
-	strcpy(cliente.rg, row[1]); 
-	strcpy(cliente.nome, row[2]); 
-	strcpy(cliente.endereco, row[3]); 
-	strcpy(cliente.telefone, row[4]); 
-	cliente.estadoCivil = stringToEstadoCivil(row[5]);
+	
+	cliente.id = atoi(row[0]);
+	strcpy(cliente.cpf, row[1]); 
+	strcpy(cliente.rg, row[2]); 
+	strcpy(cliente.nome, row[3]); 
+	strcpy(cliente.endereco, row[4]); 
+	strcpy(cliente.telefone, row[5]); 
+	cliente.estadoCivil = stringToEstadoCivil(row[6]);
 	clearResult();
 	return cliente;
 }

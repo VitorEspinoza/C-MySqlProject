@@ -93,7 +93,6 @@ const int create(char tabela[50], int numPropriedades, ...) {
         rewind(stdin);
         getchar();
     } else {
-        printf("Informa��es adicionadas corretamente.\n");
         success = 1;
     }
                                                                         
@@ -224,7 +223,6 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
         rewind(stdin);
         getchar();
     } else {
-        printf("Informa��es atualizadas corretamente.\n");
         success = 1;
     }
     
@@ -250,7 +248,6 @@ int deleteRegister(char tabela[50], Propriedade identifierField) {
         rewind(stdin);
         getchar();
     } else {
-        printf("\nInforma��es excluidas corretamente.\n");
         success = 1;
     }
 

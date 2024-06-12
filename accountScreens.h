@@ -13,38 +13,37 @@ void depositAccountScreen();
 void withdrawAccountScreen();
 
 void createAccountScreen(Cliente client) {
-	system("cls");
+    system("cls");
     printf("====================================\n");
     printf("=         Cadastro de Conta        =\n");
     printf("====================================\n");
-    
-	printf("Digite a senha da sua conta: ");
-	scanf("%s", &account.senha);
-	
-	printf("\n Criando cadastro... \n");
-	
-	strcpy(account.numAgencia, "777");
-	strcpy(account.cpfCliente, client.cpf);
-	account.saldo = 0.00;	
-    
-	ResponseAccount responseAccount;
-	responseAccount = createConta(account);
-	
-	strcpy(account.numeroConta, responseAccount.account.numeroConta);
 
-	if(responseAccount.success) {
-    	setSuccessColorTextConsole();
-    	system("cls");
-       	printf("===============================================\n");
-	    printf("=         Você agora possui uma conta :)      =\n");
-	    printf("===============================================\n");
-	    printf("Aperte enter para continuar.");
-	    clearBuffer();
-		infoAccountScreen();
-	} else {
-		printf("DEU PAU");
-	}
+    printf("Digite a senha da sua conta: ");
+    scanf("%s", account.senha);  
 
+    printf("\n Criando cadastro... \n");
+    strcpy(account.numAgencia, "777");
+
+	account.fk_Cliente_ID = client.id;
+    account.saldo = 0.00;    
+
+    ResponseAccount responseAccount;
+    responseAccount = createConta(account);
+
+    strcpy(account.numeroConta, responseAccount.account.numeroConta);
+
+    if(responseAccount.success) {
+        setSuccessColorTextConsole(); 
+        system("cls");
+        printf("===============================================\n");
+        printf("=         Você agora possui uma conta :)      =\n");
+        printf("===============================================\n");
+        printf("Aperte enter para continuar.");
+        clearBuffer(); 
+        infoAccountScreen(); 
+    } else {
+        printf("DEU PAU");
+    }
 }
 
 void infoAccountScreen() {
@@ -60,7 +59,6 @@ void infoAccountScreen() {
     printf("Saldo: R$ %.2f\n", account.saldo);
         
     do {
-        // Exibir informações da conta
         printf("\nOpções:\n");
         printf("1. Depositar\n");
         printf("2. Sacar\n");
@@ -70,7 +68,6 @@ void infoAccountScreen() {
         printf("Escolha uma opção: ");
         scanf("%d", &option);
 		getchar();
-        // Executar a ação correspondente à escolha do usuário
         switch (option) {
             case 1:
                 depositAccountScreen();
@@ -270,7 +267,7 @@ void loginAccountScreen(Cliente client) {
 		Propriedade numAccountProp = setPropriedade("numeroconta", "string", account.numeroConta);
 		account = readContaByField(numAccountProp);
 		
-		isNumAccountNull = strcmp(account.cpfCliente, "NULL") == 0;
+		isNumAccountNull = strcmp(account.numeroConta, "NULL") == 0;
 			
 		if (isNumAccountNull) {
 			system("cls");
@@ -279,40 +276,90 @@ void loginAccountScreen(Cliente client) {
 			printf("=    Numero de Conta inexistente.  =\n");
 			printf("=    Tente novamente.               =\n");
 			printf("====================================\n");
-			
 		} else {
-			int success;
-			int attempts = 0;
-			
-			do{
-				setDefaultColorTextConsole();
-				printf("Digite sua senha: ");
-				scanf("%s", &password);
+			if(account.ativa == 0)
+			{
+				system("cls");
+				printf("====================================\n");
+				printf("=          Conta desativada        =\n");
+				printf("====================================\n");
 				
-				success = strcmp(account.senha, password) == 0;
+				printf("Identificamos que você tinha uma conta conosco mas a excluiu.\n");
+				printf("Deseja recuperar sua conta? (S/N):");
+					char resposta;
+					do {
+					    scanf(" %c", &resposta);
+						if (resposta == 'S' || resposta == 's') {
+						
+							int reactivateSuccess = reactiveAccount(numAccountProp);
+							system("cls");
+							if(reactivateSuccess)
+							{
+								setSuccessColorTextConsole();
+								printf("====================================\n");
+								printf("=          Conta Recuperda         =\n");
+								printf("=       Faça o login novamente     =\n");
+								printf("====================================\n");
+								printf("Aperte enter para continuar.");
+					            clearBuffer();
+					            getchar();
+								loginAccountScreen(client);
+							}			
+							else 
+							{
+								setErrorColorTextConsole();
+								printf("===========================================\n");
+								printf("=   Não foi possível recuperar sua conta  =\n");
+								printf("=       Tente novamente mais tarde        =\n");
+								printf("===========================================\n");
+								printf("Aperte enter para continuar.");
+					            clearBuffer();
+					            getchar();
+								loginAccountScreen(client);
+							}																	
+					    } else if (resposta == 'N' || resposta == 'n') {
+					       	createAccountScreen(client);
+					    } else {
+					        printf("Opção inválida. Responda com S ou N.\n");
+					    }
+					}	while(resposta != 'S' || resposta != 's' || resposta != 'N' || resposta != 'n');
 				
-				if(success) {
-					infoAccountScreen();
-				} else {
-					system("cls");
-					setWarningColorTextConsole();
-					printf("=====================================\n");
-					printf("= Senha incorreta. Tente Novamente. =\n");
-					printf("=====================================\n");
-				}
-				
-				attempts++;
-				
-			} while (!success && attempts < 10);
-			
-			if (attempts == 10) {
-				setErrorColorTextConsole();
-				printf("=====================================\n");
-				printf("=   Numero de tentativas excedido.  =\n");
-				printf("=    Tente novamente mais tarde.    =\n");
-				printf("=====================================\n");
-		    	setDefaultColorTextConsole();
 			}
+			else {
+				int success;
+				int attempts = 0;
+				
+				do{
+					setDefaultColorTextConsole();
+					printf("Digite sua senha: ");
+					scanf("%s", &password);
+					
+					success = strcmp(account.senha, password) == 0;
+					
+					if(success) {
+						infoAccountScreen();
+					} else {
+						system("cls");
+						setWarningColorTextConsole();
+						printf("=====================================\n");
+						printf("= Senha incorreta. Tente Novamente. =\n");
+						printf("=====================================\n");
+					}
+					
+					attempts++;
+					
+				} while (!success && attempts < 10);
+				
+				if (attempts == 10) {
+					setErrorColorTextConsole();
+					printf("=====================================\n");
+					printf("=   Numero de tentativas excedido.  =\n");
+					printf("=    Tente novamente mais tarde.    =\n");
+					printf("=====================================\n");
+			    	setDefaultColorTextConsole();
+				}
+			}
+			
 
 			
 		}

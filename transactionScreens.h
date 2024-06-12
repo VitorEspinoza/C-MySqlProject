@@ -179,7 +179,7 @@ int isDestinationAccountReal(char numDestinationAccount[100]) {
 	Propriedade numDestAccountProp = setPropriedade("numeroconta", "string", numDestinationAccount);
 	Conta destAccount = readContaByField(numDestAccountProp);
 	
-	int accountExist = strcmp(destAccount.cpfCliente, "NULL") != 0;
+	int accountExist = strcmp(destAccount.numeroConta, "NULL") != 0;
 
 	if (accountExist)
 		return 1;
