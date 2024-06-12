@@ -21,7 +21,10 @@ Propriedade* setPropriedadesConta(Conta conta) {
 	char saldoConta[50];
 	sprintf(saldoConta, "%lf", conta.saldo);
 	
-    propriedades[0] = setPropriedade("fk_cliente_cpf", "string", conta.cpfCliente);
+	char idCliente[50];
+	sprintf(idCliente, "%d", conta.fk_Cliente_ID);
+	
+    propriedades[0] = setPropriedade("fk_Cliente_ID", "int", idCliente);
     propriedades[1] = setPropriedade("codigoAgencia", "string", conta.numAgencia);
     propriedades[2] = setPropriedade("saldo", "double", saldoConta);
     propriedades[3] = setPropriedade("senha", "string", conta.senha);
@@ -41,7 +44,7 @@ ResponseAccount createConta(Conta conta) {
 		generatedNumber = randomFourDigitNumber();
 		numAccountProp = setPropriedade("numeroConta", "string", generatedNumber);
 		existingAccount = readContaByField(numAccountProp);
-		isExist = strcmp(existingAccount.cpfCliente, "NULL") != 0;
+		isExist = strcmp(existingAccount.numeroConta, "NULL") != 0;
 		
 	} while(isExist);
 
@@ -64,11 +67,11 @@ ResponseAccount createConta(Conta conta) {
 
 Conta readContaByField(Propriedade propriedade) {
 	MYSQL_ROW row = readByField("conta", propriedade);
-	
+
 	Conta conta;
 	
 	if(row == NULL) {
-		strcpy(conta.cpfCliente, "NULL");
+		strcpy(conta.numeroConta, "NULL");
 		clearResult();
 		return conta;
 	}
@@ -76,9 +79,9 @@ Conta readContaByField(Propriedade propriedade) {
 	strcpy(conta.numeroConta, row[0]);
 	conta.saldo = atof(row[1]);
 	strcpy(conta.numAgencia, row[2]);
-	strcpy(conta.cpfCliente, row[3]);
+	conta.fk_Cliente_ID = atoi(row[3]);
 	strcpy(conta.senha, row[4]);
-	
+	conta.ativa = atoi(row[5]);
 	clearResult();
 	return conta;
 
@@ -97,7 +100,14 @@ ResponseAccount updateAccount(Conta account, Propriedade identifierField) {
 }
 
 int deleteConta(Propriedade identifierField) {
-	int success = deleteRegister("conta", identifierField);
+	Propriedade activeAccount = setPropriedade("ativa", "int", "0");
+	int success = update("conta", identifierField, 1, activeAccount);
+	return success;
+}
+
+int reactiveAccount(Propriedade identifierField) {
+	Propriedade activeAccount = setPropriedade("ativa", "int", "1");
+	int success = update("conta", identifierField, 1, activeAccount);
 	return success;
 }
 

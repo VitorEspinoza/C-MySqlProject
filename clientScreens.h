@@ -25,7 +25,7 @@ void clearBuffer() {
 
 void readInput(char* buffer, int size) {
     fgets(buffer, size, stdin);
-     buffer[strcspn(buffer, "\n")] = 0;
+    buffer[strcspn(buffer, "\n")] = 0;
 }
 
 char* formatPhoneNumber(char* phoneNumber) {

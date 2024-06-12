@@ -5,8 +5,9 @@ typedef struct {
     char numeroConta[255];
     double saldo;
     char numAgencia[255];
-    char cpfCliente[12];
+    int fk_Cliente_ID;
     char senha[255];
+    int ativa;
 } Conta;
 
 #endif

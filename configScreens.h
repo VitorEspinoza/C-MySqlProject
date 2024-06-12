@@ -122,10 +122,9 @@ void deleteAccountScreen(Conta* account){
 	Propriedade numAccountProp = setPropriedade("numeroConta", "string", account->numeroConta);
 	
     setWarningColorTextConsole();
-    printf("=========================================\n");
-    printf("= Certeza que deseja excluir sua conta? =\n");
-    printf("= Essa operação é irreversível.         =\n");
-    printf("=========================================\n");
+	printf("===============================================\n");
+    printf("=  Tem certeza que deseja excluir sua conta?  =\n");
+    printf("===============================================\n");
 
     
     do{    
@@ -136,7 +135,7 @@ void deleteAccountScreen(Conta* account){
     	switch(option){
     		case 1:
     			printf("Senha: ");
-    			scanf("%s", &password);
+    			scanf("%s", password);
     			
     			isPasswordCorrect = strcmp(account->senha, password) == 0;
     			
