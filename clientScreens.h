@@ -40,8 +40,7 @@ typedef int (*ValidatorFunc)(const char*);
 
 void readDocument(char* document, int size, ValidatorFunc validator, const char* documentName, int onlyNumbers) {
     int valid = 0;
-
-printf("rg digitado %s", document);
+    
     while (!valid) {
     	setDefaultColorTextConsole();
     	
@@ -51,6 +50,11 @@ printf("rg digitado %s", document);
         	printf("Digite o %s: ", documentName);
         	
         scanf("%s", document);
+        
+        if(strcmp(document, "0") == 0) {
+    		initialScreen();
+		}
+		
         if (validator(document)) {
             valid = 1;
         } else {
@@ -65,7 +69,7 @@ void createClientScreen() {
     printf("====================================\n");
     printf("=        Cadastro de Cliente       =\n");
     printf("====================================\n");
-
+	printf("(0 - sair)\n");
     clearBuffer();
     
   	char cpf[12];
@@ -141,9 +145,16 @@ void clientInfoScreen(int haveData) {
 			setDefaultColorTextConsole();
 			int c;
 			while ((c = getchar()) != '\n' && c != EOF) {}
+			printf("(0 - sair)\n");
 			printf("Por favor, digite o seu CPF para que possamos te identificar: ");
 			char cpf[11];
 			scanf("%s", &cpf);
+			
+			if(strcmp(cpf, "0") == 0){
+				system("cls");
+				initialScreen();
+			}
+			
 			Property cpfProp = setProperty("cpf", "string", cpf);
 			client = readClientByField(cpfProp);
 			result = strcmp(client.rg, "NULL");
@@ -179,6 +190,7 @@ void clientInfoScreen(int haveData) {
 			printf("1. Fazer login na conta e realizar transações\n");
 			printf("2. Editar as informações atuais\n");
 			printf("3. Excluir meu cadastro\n");
+			printf("4. Voltar\n");
 			
 			scanf("%d", &option);
 			getchar();
@@ -193,6 +205,9 @@ void clientInfoScreen(int haveData) {
 			    case 3:
 			        deleteClientScreen(0);
 			        break;
+			    case 4:
+			    	initialScreen();
+			    	break;
 			    default:
             	setErrorColorTextConsole();
                 printf("Opção inválida. Tente novamente.\n");
@@ -367,7 +382,8 @@ void deleteClientScreen(int haveData) {
 				}
                 break;
             case 2:
-                clientInfoScreen(0);
+            	system("cls");
+                clientInfoScreen(1);
                 break;
            
             default:

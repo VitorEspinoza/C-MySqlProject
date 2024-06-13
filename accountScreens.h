@@ -13,15 +13,34 @@ void depositAccountScreen();
 void withdrawAccountScreen();
 
 void createAccountScreen(Client client) {
+	int tamanho, isValidPassword;
     system("cls");
     printf("====================================\n");
     printf("=         Cadastro de Conta        =\n");
     printf("====================================\n");
-
-    printf("Digite a senha da sua conta: ");
-    scanf("%s", account.password);  
-
-    printf("\n Criando cadastro... \n");
+	printf("(0 - sair)\n");
+	
+	do {
+		printf("Digite a senha da sua conta: ");
+	    scanf("%s", account.password);  
+		
+		if (strcmp(account.password, "0") == 0) {
+			loginOptionAccountScreen(client);
+		}
+		
+		tamanho = strlen(account.password);
+		
+		isValidPassword = tamanho > 3;
+		
+		if(!isValidPassword){
+			setErrorColorTextConsole();
+			printf("Senha muito curta, no mínimo 4 caracteres.\n");
+			setDefaultColorTextConsole();
+		}
+				   
+	} while(!isValidPassword);
+	
+	printf("\n Criando cadastro... \n");
     strcpy(account.agencyCode, "777");
 
 	account.fk_Client_ID = client.id;
@@ -31,7 +50,8 @@ void createAccountScreen(Client client) {
     responseAccount = createAccount(account);
 
     strcpy(account.accountNumber, responseAccount.account.accountNumber);
-
+    system("cls");
+	printf("Enter para continuar..");
     if(responseAccount.success) {
         setSuccessColorTextConsole(); 
         system("cls");
@@ -42,8 +62,16 @@ void createAccountScreen(Client client) {
         clearBuffer(); 
         infoAccountScreen(); 
     } else {
-        printf("DEU PAU");
+        setErrorColorTextConsole(); 
+        system("cls");
+        printf("===============================================\n");
+        printf("=        Não foi possível criar sua conta     =\n");
+        printf("===============================================\n");
+        printf("Aperte enter para continuar.");
+        clearBuffer(); 
+        clientInfoScreen(0); 
     }
+   
 }
 
 void infoAccountScreen() {
@@ -102,10 +130,15 @@ void depositAccountScreen() {
     printf("====================================\n");
     printf("=              Deposito            =\n");
     printf("====================================\n");
+    printf("(0 - Sair)\n");
     printf("Saldo atual: R$%.2f\n", account.balance);
     printf("Digite o quanto deseja depositar: R$");
 
     scanf("%s", str);
+    
+    if (strcmp(str, "0") == 0)
+    	infoAccountScreen();
+
     while (!isNumber(str)) {
     	setErrorColorTextConsole();
         printf("Entrada inválida!\n");
@@ -157,10 +190,14 @@ void withdrawAccountScreen() {
     printf("====================================\n");
     
     do { 
+    	printf("(0 - Sair)\n");
 	    printf("Saldo atual: R$%.2f\n", account.balance);
 	    printf("Digite o quanto deseja sacar: R$");
 	
 	    scanf("%s", str);
+	    if (strcmp(str, "0") == 0)
+    		infoAccountScreen();
+    		
 	    while (!isNumber(str)) {
 	    	setErrorColorTextConsole();
 	        printf("Entrada inválida!\n");
@@ -227,11 +264,12 @@ void loginOptionAccountScreen(Client client) {
 	printf("Já possui uma CONTA para logar?\n");
 	do {
 
-		printf("1. Sim\n2. Não\n");
+		printf("1. Sim\n2. Não\n3. Voltar\n");
 		printf("Digite sua escolha: ");
 		
 		scanf("%d", &option);
 		getchar();
+		
 		
 		switch (option) {
 			case 1:
@@ -239,6 +277,10 @@ void loginOptionAccountScreen(Client client) {
 				break;
 			case 2:
 				createAccountScreen(client);
+				break;
+			case 3:
+				system("cls");
+				clientInfoScreen(1);
 				break;
 			default:
 				setErrorColorTextConsole();
@@ -261,8 +303,14 @@ void loginAccountScreen(Client client) {
 	
 	do {
 		setDefaultColorTextConsole();
+		printf("(0 - sair)\n");
 		printf("Digite o numero da sua conta: ");
 		scanf("%s", &account.accountNumber);
+		
+		if(strcmp(account.accountNumber, "0") == 0){
+			system("cls");
+			loginOptionAccountScreen(client);
+		}
 		
 		Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
 		account = readAccountByField(numAccountProp);

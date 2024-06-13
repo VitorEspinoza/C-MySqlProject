@@ -55,12 +55,17 @@ void realizeTransaction(Account* account) {
 	printf("====================================\n");
     printf("=             Transação            =\n");
     printf("====================================\n");
-    
+    printf("(0 - sair)\n");
     strcpy(transaction.accountNumber, account->accountNumber);
 			    
 	printf("Saldo atual: R$ %.2f\n", account->balance);
     printf("Digite o valor da transação: R$ ");
     scanf("%s", str);
+    
+    if(strcmp(str, "0") == 0){
+    	transactionMenuScreen(account);
+	}
+    
     while (!isNumber(str)) {
     	setErrorColorTextConsole();
         printf("Entrada inválida!\n");
