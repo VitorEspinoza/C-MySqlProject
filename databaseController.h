@@ -10,27 +10,27 @@
 #define DATABASECONTROLLER_H
 
 typedef struct {
-    char Nome[50];
-    char Tipo[10];
-    char Valor[50]; 
-} Propriedade;
+    char Name[50];
+    char Type[10];
+    char Value[50]; 
+} Property;
 
-Propriedade setPropriedade(char nome[50], char tipo[10], char valor[50]){
-	Propriedade P;
-	strcpy(P.Nome, nome); 
-	strcpy(P.Tipo, tipo);
-	strcpy(P.Valor, valor); 
+Property setProperty(char name[50], char type[10], char value[50]){
+	Property P;
+	strcpy(P.Name, name); 
+	strcpy(P.Type, type);
+	strcpy(P.Value, value); 
 
 	return P;
 }
 
-bool propertieIsNumber(Propriedade prop) {
-	bool isNumber = strcmp(prop.Tipo, "int") == 0 || strcmp(prop.Tipo, "double") == 0;
+bool propertieIsNumber(Property prop) {
+	bool isNumber = strcmp(prop.Type, "int") == 0 || strcmp(prop.Type, "double") == 0;
 	return isNumber;
 }
 
 
-char* returnAttribution(Propriedade prop) {
+char* returnAttribution(Property prop) {
     if (propertieIsNumber(prop)) {
         return "%s = %s";
     } 
@@ -40,38 +40,38 @@ char* returnAttribution(Propriedade prop) {
 }
 MYSQL_RES *result;
 
-const int create(char tabela[50], int numPropriedades, ...) {
+const int create(char tabela[50], int numProperties, ...) {
     char scriptSQL[500]; 
     sprintf(scriptSQL, "INSERT INTO %s (", tabela);
     va_list args;
-    va_start(args, numPropriedades);
+    va_start(args, numProperties);
     
-    Propriedade propriedadesArray[numPropriedades];
+    Property propertiesArray[numProperties];
     int i;
-    for (i = 0; i < numPropriedades; ++i) {
-         propriedadesArray[i] = va_arg(args, Propriedade);
-        sprintf(scriptSQL + strlen(scriptSQL), "%s", propriedadesArray[i].Nome);
+    for (i = 0; i < numProperties; ++i) {
+         propertiesArray[i] = va_arg(args, Property);
+        sprintf(scriptSQL + strlen(scriptSQL), "%s", propertiesArray[i].Name);
 
-        if (i < numPropriedades - 1) {
+        if (i < numProperties - 1) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
         }
     }
 
     sprintf(scriptSQL + strlen(scriptSQL), ") VALUES (");
 
-    for (i = 0; i < numPropriedades; ++i) {
+    for (i = 0; i < numProperties; ++i) {
     	
     	
 	char format[20];
-    if (propertieIsNumber(propriedadesArray[i])) {
+    if (propertieIsNumber(propertiesArray[i])) {
        	strcpy(format, "%s");
     } 
     else {
     	strcpy(format, "'%s'");
 	}
 	
-       sprintf(scriptSQL + strlen(scriptSQL), format, propriedadesArray[i].Valor);
-		const isLastItem = i == numPropriedades - 1;
+       sprintf(scriptSQL + strlen(scriptSQL), format, propertiesArray[i].Value);
+		const isLastItem = i == numProperties - 1;
         if (!isLastItem) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
         }
@@ -79,12 +79,9 @@ const int create(char tabela[50], int numPropriedades, ...) {
 
 
     sprintf(scriptSQL + strlen(scriptSQL), ");\n");
-
     va_end(args);
-  	
   	int success = 0;
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 
@@ -114,16 +111,13 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
     int count = 0;
 
     if (mySqlInstance == NULL) {
-        printf("ERROR: mySqlInstance ï¿½ NULL\n");
         return NULL;
     }
 
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
         return NULL;
     }
-
 
     if (mysql_query(mySqlInstance, scriptSQL) == 0) {
         MYSQL_RES *result = mysql_store_result(mySqlInstance);
@@ -138,7 +132,7 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
 
                 count++;
             }
-            array = realloc(array, (count + 1) * sizeof(void*)); // Aloca espaço para o último elemento
+            array = realloc(array, (count + 1) * sizeof(void*)); // Aloca espaï¿½o para o ï¿½ltimo elemento
 			array[count] = NULL;
             *numberOfRows = count;
             mysql_free_result(result);
@@ -152,7 +146,7 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
     return array;
 }
 
-MYSQL_ROW readByField(char tabela[50], Propriedade field)
+MYSQL_ROW readByField(char tabela[50], Property field)
 {
 	char scriptSQL[500];
 	
@@ -162,8 +156,7 @@ MYSQL_ROW readByField(char tabela[50], Propriedade field)
  	char* format = returnAttribution(field);
 	char whereClause[50];
 	sprintf(whereClause, " WHERE %s", format);
-    sprintf(scriptSQL + strlen(scriptSQL), whereClause, field.Nome, field.Valor);
-    
+    sprintf(scriptSQL + strlen(scriptSQL), whereClause, field.Name, field.Value);
 	 if (mysql_query(mySqlInstance, scriptSQL) == 0) {
        result = mysql_store_result(mySqlInstance);
         if (result) {
@@ -184,24 +177,24 @@ clearResult() {
 }
 
 
-int update(char tabela[50], Propriedade identifierField, int numPropriedades, ...) {
+int update(char tabela[50], Property identifierField, int numProperties, ...) {
 
 	char scriptSQL[500]; 
     sprintf(scriptSQL, "UPDATE %s SET ", tabela);
     va_list args;
-    va_start(args, numPropriedades);
+    va_start(args, numProperties);
    
-	Propriedade propriedadesArray[numPropriedades];
+	Property propertiesArray[numProperties];
     int i;
-    for (i = 0; i < numPropriedades; ++i) {
+    for (i = 0; i < numProperties; ++i) {
    
-        propriedadesArray[i] = va_arg(args, Propriedade);
+        propertiesArray[i] = va_arg(args, Property);
          
 	    char* format = returnAttribution(identifierField);
-		sprintf(scriptSQL + strlen(scriptSQL), format, propriedadesArray[i].Nome, propriedadesArray[i].Valor);
+		sprintf(scriptSQL + strlen(scriptSQL), format, propertiesArray[i].Name, propertiesArray[i].Value);
 		
 	
-        if (i < numPropriedades - 1) {
+        if (i < numProperties - 1) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
         }
     }
@@ -209,12 +202,10 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
     char* format = returnAttribution(identifierField);
 	char whereClause[50];
 	sprintf(whereClause, " WHERE %s", format);
-    sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Nome, identifierField.Valor);
-
+    sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Name, identifierField.Value);
+	
 	int success = 0;
-
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 
@@ -229,17 +220,16 @@ int update(char tabela[50], Propriedade identifierField, int numPropriedades, ..
     return success;
 }
 
-int deleteRegister(char tabela[50], Propriedade identifierField) {
+int deleteRegister(char tabela[50], Property identifierField) {
 	char scriptSQL[500];
 		
 	char* format = returnAttribution(identifierField);
 	char whereClause[50];
-	sprintf(whereClause, format, identifierField.Nome, identifierField.Valor);
+	sprintf(whereClause, format, identifierField.Name, identifierField.Value);
 
 	sprintf(scriptSQL, "DELETE FROM %s WHERE %s;", tabela, whereClause);
 	int success = 0;
     if (mysql_ping(mySqlInstance)) {
-        printf("ERROR: Impossï¿½vel conectar.\n");
         printf("%s\n", mysql_error(mySqlInstance));
     }
 

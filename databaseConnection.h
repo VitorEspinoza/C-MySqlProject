@@ -6,10 +6,9 @@
 #ifndef DATABASECONNECTION_H
 #define DATABASECONNECTION_H
 
-// Resto do seu código aqui
 char HOST[] = "localhost";
 char USER[] = "root";
-char PASS[] = "BancodeDados11@10";
+char PASS[] = "csharppass31";
 MYSQL* mySqlInstance;
 
 
@@ -28,7 +27,7 @@ int initMySqlConnection() {
         return 0;
     }
 
-    if(!mysql_real_connect(mySqlInstance, HOST, USER, PASS, "banco", 3306, NULL, 0))
+    if(!mysql_real_connect(mySqlInstance, HOST, USER, PASS, "bank", 3306, NULL, 0))
     {
         printf("ERROR: Alguma informação do banco de dados está incorreta ou não existe.\n");
         return 0;
@@ -38,9 +37,6 @@ int initMySqlConnection() {
 
 
 }
-
-
-
 
 #endif // DATABASECONNECTION_H
 

@@ -1,21 +1,21 @@
-void telaInicial();
-void telaInicial() {
+void initialScreen();
+void initialScreen() {
 	setDefaultColorTextConsole();
 	printf("====================================\n");
     printf("=           Tela Inicial           =\n");
     printf("====================================\n");
-	char resposta;
+	char response;
 	
 	printf("Você já tem uma conta? (S/N): ");
 	
 	do {
-    scanf(" %c", &resposta);
-		  if (resposta == 'S' || resposta == 's') {
+    scanf(" %c", &response);
+		  if (response == 'S' || response == 's') {
 		  	clientInfoScreen(0);
-	    } else if (resposta == 'N' || resposta == 'n') {
+	    } else if (response == 'N' || response == 'n') {
 	       createClientScreen();
 	    } else {
 	        printf("Opção inválida. Responda com S ou N.\n");
 	    }
-	}	while(resposta != 'S' || resposta != 's' || resposta != 'N' || resposta != 'n');
+	}	while(response != 'S' || response != 's' || response != 'N' || response != 'n');
 }

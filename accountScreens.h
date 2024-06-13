@@ -3,34 +3,34 @@
 #include "configScreens.h"
 #include "transactionScreens.h"
 
-Conta account;
+Account account;
 
-void createAccountScreen(Cliente client);
+void createAccountScreen(Client client);
 void infoAccountScreen();
-void loginAccountScreen(Cliente client);
-void loginOptionAccountScreen(Cliente client);
+void loginAccountScreen(Client client);
+void loginOptionAccountScreen(Client client);
 void depositAccountScreen();
 void withdrawAccountScreen();
 
-void createAccountScreen(Cliente client) {
+void createAccountScreen(Client client) {
     system("cls");
     printf("====================================\n");
     printf("=         Cadastro de Conta        =\n");
     printf("====================================\n");
 
     printf("Digite a senha da sua conta: ");
-    scanf("%s", account.senha);  
+    scanf("%s", account.password);  
 
     printf("\n Criando cadastro... \n");
-    strcpy(account.numAgencia, "777");
+    strcpy(account.agencyCode, "777");
 
-	account.fk_Cliente_ID = client.id;
-    account.saldo = 0.00;    
+	account.fk_Client_ID = client.id;
+    account.balance = 0.00;    
 
     ResponseAccount responseAccount;
-    responseAccount = createConta(account);
+    responseAccount = createAccount(account);
 
-    strcpy(account.numeroConta, responseAccount.account.numeroConta);
+    strcpy(account.accountNumber, responseAccount.account.accountNumber);
 
     if(responseAccount.success) {
         setSuccessColorTextConsole(); 
@@ -54,9 +54,9 @@ void infoAccountScreen() {
 	printf("====================================\n");
 	printf("=             Menu Conta           =\n");
 	printf("====================================\n");
-	printf("Número da Agencia: %s\n", account.numAgencia);
-    printf("Número da Conta: %s\n", account.numeroConta);
-    printf("Saldo: R$ %.2f\n", account.saldo);
+	printf("Número da Agencia: %s\n", account.agencyCode);
+    printf("Número da Conta: %s\n", account.accountNumber);
+    printf("Saldo: R$ %.2f\n", account.balance);
         
     do {
         printf("\nOpções:\n");
@@ -65,7 +65,7 @@ void infoAccountScreen() {
         printf("3. Transação\n");
         printf("4. Configurações\n");
         printf("5. Sair\n");
-        printf("Escolha uma opção: ");
+        printf("Escolha uma opções: ");
         scanf("%d", &option);
 		getchar();
         switch (option) {
@@ -83,7 +83,7 @@ void infoAccountScreen() {
                 break;
             case 5:
             	system("cls");
-                telaInicial();
+                initialScreen();
                 break;
             default:
             	setErrorColorTextConsole();
@@ -102,7 +102,7 @@ void depositAccountScreen() {
     printf("====================================\n");
     printf("=              Deposito            =\n");
     printf("====================================\n");
-    printf("Saldo atual: R$%.2f\n", account.saldo);
+    printf("Saldo atual: R$%.2f\n", account.balance);
     printf("Digite o quanto deseja depositar: R$");
 
     scanf("%s", str);
@@ -110,14 +110,14 @@ void depositAccountScreen() {
     	setErrorColorTextConsole();
         printf("Entrada inválida!\n");
         setDefaultColorTextConsole();
-        printf("Por favor, digite um número: R$");
+        printf("Por favor, digite um nÃºmero: R$");
         scanf("%s", str);
     }
     value = atof(str);
     
-    account.saldo = account.saldo + value;
+    account.balance = account.balance + value;
     
-    Propriedade numAccountProp = setPropriedade("numeroConta", "string", account.numeroConta);
+    Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
     
     ResponseAccount responseAccount;
     responseAccount = updateAccount(account, numAccountProp);
@@ -127,7 +127,7 @@ void depositAccountScreen() {
     	setSuccessColorTextConsole();
     	printf("====================================\n");
     	printf("=         Deposito realizado!      =\n");
-    	printf("=         Novo saldo: R$%.2f       =\n", account.saldo);
+    	printf("=         Novo saldo: R$%.2f       =\n", account.balance);
     	printf("====================================\n");
     	printf("Aperte enter para continuar.");
     	clearBuffer();
@@ -137,7 +137,7 @@ void depositAccountScreen() {
 		system("cls");
     	setErrorColorTextConsole();
 		printf("================================================\n");
-   	 	printf("=    Oops... Erro ocorrido durante operação    =\n");
+   	 	printf("=    Oops... Erro ocorrido durante operaÃ§Ã£o    =\n");
     	printf("================================================\n");
     	printf("Aperte enter para continuar.");
     	clearBuffer();
@@ -157,8 +157,8 @@ void withdrawAccountScreen() {
     printf("====================================\n");
     
     do { 
-	    printf("Saldo atual: R$%.2f\n", account.saldo);
-	    printf("Digite o quanto deseja depositar: R$");
+	    printf("Saldo atual: R$%.2f\n", account.balance);
+	    printf("Digite o quanto deseja sacar: R$");
 	
 	    scanf("%s", str);
 	    while (!isNumber(str)) {
@@ -170,7 +170,7 @@ void withdrawAccountScreen() {
 	    }
 	    value = atof(str);
 	    
-	    if (value > account.saldo){
+	    if (value > account.balance){
 	    	system("cls");
 	    	setWarningColorTextConsole();
 	    	printf("================================================\n");
@@ -182,9 +182,9 @@ void withdrawAccountScreen() {
    		 	printf("====================================\n");
 	    	
 		} else {
-			account.saldo = account.saldo - value;
+			account.balance = account.balance - value;
 	    
-		    Propriedade numAccountProp = setPropriedade("numeroConta", "string", account.numeroConta);
+		    Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
 		    
 		    ResponseAccount responseAccount;
 		    responseAccount = updateAccount(account, numAccountProp);
@@ -194,7 +194,7 @@ void withdrawAccountScreen() {
 		    	setSuccessColorTextConsole();
 		    	printf("====================================\n");
 		    	printf("=         Saque realizado!         =\n");
-		    	printf("=         Novo saldo: R$%.2f       =\n", account.saldo);
+		    	printf("=         Novo saldo: R$%.2f       =\n", account.balance);
 		    	printf("====================================\n");
 		    	printf("Aperte enter para continuar.");
 		    	clearBuffer();
@@ -213,12 +213,12 @@ void withdrawAccountScreen() {
 		    	infoAccountScreen();
 			}
 		}
-	} while(value > account.saldo);
+	} while(value > account.balance);
    
     
 }
 
-void loginOptionAccountScreen(Cliente client) {
+void loginOptionAccountScreen(Client client) {
 	system("cls");
 	int option;		
 	printf("====================================\n");
@@ -250,7 +250,7 @@ void loginOptionAccountScreen(Cliente client) {
 	while(option != 1 && option != 2);
 }
 
-void loginAccountScreen(Cliente client) {
+void loginAccountScreen(Client client) {
 	char password[100];
 	int isNumAccountNull;
 	
@@ -262,12 +262,12 @@ void loginAccountScreen(Cliente client) {
 	do {
 		setDefaultColorTextConsole();
 		printf("Digite o numero da sua conta: ");
-		scanf("%s", &account.numeroConta);
+		scanf("%s", &account.accountNumber);
 		
-		Propriedade numAccountProp = setPropriedade("numeroconta", "string", account.numeroConta);
-		account = readContaByField(numAccountProp);
+		Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
+		account = readAccountByField(numAccountProp);
 		
-		isNumAccountNull = strcmp(account.numeroConta, "NULL") == 0;
+		isNumAccountNull = strcmp(account.accountNumber, "NULL") == 0;
 			
 		if (isNumAccountNull) {
 			system("cls");
@@ -277,7 +277,7 @@ void loginAccountScreen(Cliente client) {
 			printf("=    Tente novamente.               =\n");
 			printf("====================================\n");
 		} else {
-			if(account.ativa == 0)
+			if(account.active == 0)
 			{
 				system("cls");
 				printf("====================================\n");
@@ -334,7 +334,7 @@ void loginAccountScreen(Cliente client) {
 					printf("Digite sua senha: ");
 					scanf("%s", &password);
 					
-					success = strcmp(account.senha, password) == 0;
+					success = strcmp(account.password, password) == 0;
 					
 					if(success) {
 						infoAccountScreen();
