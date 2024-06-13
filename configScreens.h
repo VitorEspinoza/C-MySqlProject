@@ -145,7 +145,7 @@ void deleteAccountScreen(Account* account){
     			
     			if (isPasswordCorrect){ 
     				
-    				Property numAccountProp = setProperty("numeroconta", "string", account->accountNumber);
+    				Property numAccountProp = setProperty("accountnumber", "string", account->accountNumber);
 					success = deleteAccount(numAccountProp);
 	    			
 	    			if (success) {
