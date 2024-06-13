@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-void configMenuScreen(Conta* account);
-void changePasswordScreen(Conta* account);
-void deleteAccountScreen(Conta* account);
+void configMenuScreen(Account* account);
+void changePasswordScreen(Account* account);
+void deleteAccountScreen(Account* account);
 
-void configMenuScreen(Conta* account) {
+void configMenuScreen(Account* account) {
 	int option;
 	system("cls");
 	printf("====================================\n");
@@ -40,7 +40,7 @@ void configMenuScreen(Conta* account) {
 
 }
 
-void changePasswordScreen(Conta* account) {
+void changePasswordScreen(Account* account) {
     char oldPassword[100];
     char newPassword[100];
     char confirmPassword[100];
@@ -55,7 +55,7 @@ void changePasswordScreen(Conta* account) {
 		printf("Digite sua senha atual: ");
 	    scanf("%s", oldPassword);
 		attempts++;
-	    isPasswordCorrect = strcmp(oldPassword, account->senha) == 0;
+	    isPasswordCorrect = strcmp(oldPassword, account->password) == 0;
 	    
 		if(isPasswordCorrect) {
 			do {
@@ -69,10 +69,10 @@ void changePasswordScreen(Conta* account) {
 				isEqualPassword = strcmp(newPassword, confirmPassword) == 0;
 				
 		        if (isEqualPassword) {
-		            strcpy(account->senha, confirmPassword);
+		            strcpy(account->password, confirmPassword);
 					
-					Propriedade numAccountProp = setPropriedade("numeroConta", "string", account->numeroConta);
-		            updateAccount(*account, numAccountProp);
+					Property accountNumberProp = setProperty("accountNumber", "string", account->accountNumber);
+		            updateAccount(*account, accountNumberProp);
 		
 		            system("cls");
 		            setSuccessColorTextConsole();
@@ -113,13 +113,12 @@ void changePasswordScreen(Conta* account) {
 
 }
 
-void deleteAccountScreen(Conta* account){
+void deleteAccountScreen(Account* account){
 	int option;
 	int success;
 	int password[100];
 	int isPasswordCorrect;
 	
-	Propriedade numAccountProp = setPropriedade("numeroConta", "string", account->numeroConta);
 	
     setWarningColorTextConsole();
 	printf("===============================================\n");
@@ -129,7 +128,7 @@ void deleteAccountScreen(Conta* account){
     
     do{    
 		printf("1. Sim\n");
-	    printf("2. N„o\n");
+	    printf("2. N√£o\n");
 	    scanf("%d", &option);
 	    getchar();
     	switch(option){
@@ -137,23 +136,23 @@ void deleteAccountScreen(Conta* account){
     			printf("Senha: ");
     			scanf("%s", password);
     			
-    			isPasswordCorrect = strcmp(account->senha, password) == 0;
+    			isPasswordCorrect = strcmp(account->password, password) == 0;
     			
     			if (isPasswordCorrect){ 
     			
-					success = deleteConta(numAccountProp);
+					success = deleteAccount(numAccountProp);
 	    			
 	    			if (success) {
 			            system("cls");
 			            setSuccessColorTextConsole();
 			            printf("====================================\n");
-			            printf("=    Conta excluida com sucesso.   =\n");
+			            printf("=    Account excluida com sucesso.   =\n");
 			            printf("====================================\n");
 			            printf("Aperte enter para continuar.");
 			            clearBuffer();
 	            		getchar();
 	            		system("cls");
-	            		telaInicial();
+	            		initialScreen();
 					}
 				}
 				break;
@@ -162,7 +161,7 @@ void deleteAccountScreen(Conta* account){
     			break;
     		default:
     			setErrorColorTextConsole();
-    			printf("OpÁ„o inv·lida. Tente novamente.\n");
+    			printf("Op√ß√£o inv√°lida. Tente novamente.\n");
     			setWarningColorTextConsole();
 		}
 	}while(option != 1 && option != 2);

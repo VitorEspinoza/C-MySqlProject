@@ -1,7 +1,7 @@
 #include <string.h>
 #include <locale.h>
 #include <stdio.h>
-#include "transacao.h"
+#include "transaction.h"
 #include "databaseController.h"
 
 typedef struct {
@@ -9,30 +9,30 @@ typedef struct {
 	Transaction** transactions;
 }ResponseTransactions;
 
-Propriedade* setPropertiesTransaction(Transaction transaction) {
+Property* setPropertiesTransaction(Transaction transaction) {
 
 	char convertedPaymentType[10];
     strcpy(convertedPaymentType, PaymentTypeToString(transaction.paymentType));
 
 	char quantityString[50];
-	sprintf(quantityString, "%lf", transaction.quantia);
+	sprintf(quantityString, "%lf", transaction.amount);
 
-    static Propriedade propriedades[6];
+    static Property properties[6];
 
-    propriedades[0] = setPropriedade("fk_conta_numeroconta", "string", transaction.numeroConta);
-    propriedades[1] = setPropriedade("quantia", "double", quantityString);
-    propriedades[2] = setPropriedade("data", "date", transaction.data);
-    propriedades[3] = setPropriedade("hora", "time", transaction.hora);
-    propriedades[4] = setPropriedade("conta_Destino", "string", transaction.contaDestino);
-    propriedades[5] = setPropriedade("tipoPagamento", "string", convertedPaymentType);
+    properties[0] = setProperty("fk_account_accountNumber", "string", transaction.accountNumber);
+    properties[1] = setProperty("amount", "double", quantityString);
+    properties[2] = setProperty("date", "date", transaction.date);
+    properties[3] = setProperty("hour", "time", transaction.hour);
+    properties[4] = setProperty("target_account", "string", transaction.targetAccount);
+    properties[5] = setProperty("paymentType", "string", convertedPaymentType);
 
-    return propriedades;
+    return properties;
 }
 
 
 int createTransaction(Transaction transaction) {
-	Propriedade* propriedades = setPropertiesTransaction(transaction);
-	int success = create("transacao", 6, propriedades[0], propriedades[1], propriedades[2], propriedades[3], propriedades[4], propriedades[5]);
+	Property* properties = setPropertiesTransaction(transaction);
+	int success = create("transaction", 6, properties[0], properties[1], properties[2], properties[3], properties[4], properties[5]);
 
 	return success;
 }
@@ -40,27 +40,26 @@ int createTransaction(Transaction transaction) {
 
 void fillTransaction(void* structToFill, MYSQL_ROW row) {
     if (structToFill == NULL || row == NULL) {
-        printf("Erro: structToFill ou row é NULL\n");
         return;
     }
 
     Transaction* transaction = (Transaction*)structToFill;
 
-    if (row[0] != NULL) strcpy(transaction->numeroConta, row[0]);
-    if (row[1] != NULL) strcpy(transaction->contaDestino, row[1]);
+    if (row[0] != NULL) strcpy(transaction->accountNumber, row[0]);
+    if (row[1] != NULL) strcpy(transaction->targetAccount, row[1]);
 	if (row[2] != NULL) transaction->paymentType = stringToPaymentType(row[2]);
-    if (row[3] != NULL) transaction->quantia = atof(row[3]);
-    if (row[4] != NULL) strcpy(transaction->data, row[4]);
-    if (row[5] != NULL) strcpy(transaction->hora, row[5]);
+    if (row[3] != NULL) transaction->amount = atof(row[3]);
+    if (row[4] != NULL) strcpy(transaction->date, row[4]);
+    if (row[5] != NULL) strcpy(transaction->hour, row[5]);
 }
 
-ResponseTransactions readAllTransactions(char * numeroConta) {
-	char whereQuery[50];
+ResponseTransactions readAllTransactions(char * accountNumber) {
+	char whereClause[50];
 
-	sprintf(whereQuery, "WHERE fk_conta_numeroConta = %s", numeroConta);
+	sprintf(whereClause, "WHERE fk_account_accountNumber = %s", accountNumber);
 
 	ResponseTransactions responseTransactions;
 
-    responseTransactions.transactions = (Transaction**)readAll("Transacao", fillTransaction, sizeof(Transaction), whereQuery, &(responseTransactions.numberOfRows));
+    responseTransactions.transactions = (Transaction**)readAll("transaction", fillTransaction, sizeof(Transaction), whereClause, &(responseTransactions.numberOfRows));
 	return responseTransactions;
 }

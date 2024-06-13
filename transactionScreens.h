@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <string.h>
-#include "transacao.h"
+#include "transaction.h"
 #include "transactionController.h"
 
-void transactionMenuScreen(Conta* account);
-void realizeTransaction(Conta* account);
+void transactionMenuScreen(Account* account);
+void realizeTransaction(Account* account);
 void consultBalance();
-int isDestinationAccountReal(char numDestinationAccount[100]);
+int isTargetAccountReal(char numTargetAccount[100]);
 
 Transaction transaction;
 
-void transactionMenuScreen(Conta* account) {
+void transactionMenuScreen(Account* account) {
 	int option;
 	
 	system("cls");
@@ -46,8 +46,8 @@ void transactionMenuScreen(Conta* account) {
 	} while (option != 1 && option != 2 && option != 3);
 }
 
-void realizeTransaction(Conta* account) {
-	int isSufficientSaldo;
+void realizeTransaction(Account* account) {
+	int isSufficientBalance;
 	char str[100];
 	double value;
 	
@@ -56,43 +56,43 @@ void realizeTransaction(Conta* account) {
     printf("=             Transação            =\n");
     printf("====================================\n");
     
-    strcpy(transaction.numeroConta, account->numeroConta);
+    strcpy(transaction.accountNumber, account->accountNumber);
 			    
-	printf("Saldo atual: R$ %.2f\n", account->saldo);
+	printf("Saldo atual: R$ %.2f\n", account->balance);
     printf("Digite o valor da transação: R$ ");
     scanf("%s", str);
     while (!isNumber(str)) {
     	setErrorColorTextConsole();
         printf("Entrada inválida!\n");
         setDefaultColorTextConsole();
-        printf("Por favor, digite um número: R$");
+        printf("Por favor, digite um nÃºmero: R$");
         scanf("%s", str);
     }
     value = atof(str);
     
-    transaction.quantia = value;
+    transaction.amount = value;
     
-    isSufficientSaldo = transaction.quantia <= account->saldo;
+    isSufficientBalance = transaction.amount <= account->balance;
     
-    if (isSufficientSaldo) {
+    if (isSufficientBalance) {
     	
 		printf("Digite o numero da conta destino da transação: ");
-	    scanf("%s", &transaction.contaDestino);
+	    scanf("%s", &transaction.targetAccount);
 	    
-	    while (!isNumber(transaction.contaDestino)) {
+	    while (!isNumber(transaction.targetAccount)) {
 	    	setErrorColorTextConsole();
 	        printf("Entrada inválida!\n");
 	        setDefaultColorTextConsole();
 	        printf("Por favor, digite um número de conta: ");
-	        scanf("%s", &transaction.contaDestino);
+	        scanf("%s", &transaction.targetAccount);
 	    }
 	    
-	    while (!isDestinationAccountReal(transaction.contaDestino)) {
+	    while (!isTargetAccountReal(transaction.targetAccount)) {
 	    	setErrorColorTextConsole();
 	        printf("Conta destino inexistente!\n");
 	        setDefaultColorTextConsole();
-	        printf("Por favor, um número de conta existente: ");
-	        scanf("%s", &transaction.contaDestino);
+	        printf("Por favor, um nÃºmero de conta existente: ");
+	        scanf("%s", &transaction.targetAccount);
 	    }
 	    
 	    printf("Tipo pagamento (0 - Credito, 1 - Debito): ");
@@ -114,20 +114,20 @@ void realizeTransaction(Conta* account) {
 	    strftime(strHour, sizeof(strHour), "%H:%M:%S", tm);
 	    
 	    strDate[11]= '\0';
-	    strcpy(transaction.data, strDate);
-	    strcpy(transaction.hora, strHour);
+	    strcpy(transaction.date, strDate);
+	    strcpy(transaction.hour, strHour);
 	    createTransaction(transaction);
 	    
-	    account->saldo = account->saldo - transaction.quantia;
+	    account->balance = account->balance - transaction.amount;
 	    
-	    Propriedade numAccountSourceProp = setPropriedade("numeroConta", "string", transaction.numeroConta);
+	    Property numAccountSourceProp = setProperty("accountNumber", "string", transaction.accountNumber);
 	    updateAccount(*account, numAccountSourceProp);
 	    
-	    Propriedade numAccountDestinationProp = setPropriedade("numeroConta", "string", transaction.contaDestino);
-	    Conta accountDestination = readContaByField(numAccountDestinationProp);
+	    Property numTargetAccountProp = setProperty("accountNumber", "string", transaction.targetAccount);
+	    Account targetAccount = readAccountByField(numTargetAccountProp);
 	    
-	    accountDestination.saldo = accountDestination.saldo + transaction.quantia;
-	    updateAccount(accountDestination, numAccountDestinationProp);
+	    targetAccount.balance = targetAccount.balance + transaction.amount;
+	    updateAccount(targetAccount, numTargetAccountProp);
 	    
 		system("cls");
 		setSuccessColorTextConsole();
@@ -141,14 +141,14 @@ void realizeTransaction(Conta* account) {
 	}
 }
 
-void consultBalance(Conta account){
+void consultBalance(Account account){
     int i;
-	char numContaString[50];
+	char numAccountString[50];
 	int option;
-	strcpy(numContaString, account.numeroConta);
+	strcpy(numAccountString, account.accountNumber);
 				
 	ResponseTransactions responseTransactions;				
-	responseTransactions = readAllTransactions(numContaString);
+	responseTransactions = readAllTransactions(numAccountString);
 	
 	system("cls");
 	printf("====================================\n");
@@ -160,9 +160,9 @@ void consultBalance(Conta account){
 	} else {
 		for (i=0; responseTransactions.transactions[i] != NULL; i++) {
 			printf("\n--------------------------------------------\n");
-			printf("Data: %s  Hora: %s\n", responseTransactions.transactions[i]->data, responseTransactions.transactions[i]->hora);
-			printf("Valor: %.2f  Tipo de pagamento: %s\n", responseTransactions.transactions[i]->quantia, PaymentTypeToString(responseTransactions.transactions[i]->paymentType));
-			printf("Conta destino: %s", responseTransactions.transactions[i]->contaDestino);
+			printf("Data: %s  Hora: %s\n", responseTransactions.transactions[i]->date, responseTransactions.transactions[i]->hour);
+			printf("Valor: %.2f  Tipo de pagamento: %s\n", responseTransactions.transactions[i]->amount, PaymentTypeToString(responseTransactions.transactions[i]->paymentType));
+			printf("Conta destino: %s", responseTransactions.transactions[i]->targetAccount);
 			printf("\n--------------------------------------------\n");
 		}
 	}
@@ -175,11 +175,11 @@ void consultBalance(Conta account){
 	}
 }
 
-int isDestinationAccountReal(char numDestinationAccount[100]) {
-	Propriedade numDestAccountProp = setPropriedade("numeroconta", "string", numDestinationAccount);
-	Conta destAccount = readContaByField(numDestAccountProp);
+int isTargetAccountReal(char numTargetAccount[100]) {
+	Property numTargetAccountProp = setProperty("accountNumber", "string", numTargetAccount);
+	Account targetAccount = readAccountByField(numTargetAccountProp);
 	
-	int accountExist = strcmp(destAccount.numeroConta, "NULL") != 0;
+	int accountExist = strcmp(targetAccount.accountNumber, "NULL") != 0;
 
 	if (accountExist)
 		return 1;
