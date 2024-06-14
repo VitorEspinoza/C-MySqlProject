@@ -21,11 +21,11 @@ Projeto realizado como parte da avaliação da disciplina DS123 Lingauem de Prog
  - Rodar o script sql para criação das tabelas e seus relacionamentos (script.sql)
 
 ### Config da biblioteca mysql com C no DEV-C++
-
- - Pressione ctrl + h para abrir as opções do projeto e vá para Directories.
- - Na aba de library directories adicione o caminho da pasta lib do MySQL (ex: C:\Program Files\MySQL\MySQL Server 8.0\lib)
- - Na aba de include directories adicione os caminhos para as pastas include e include/mysql (ex: C:\Program Files\MySQL\MySQL Server 8.0\include & C:\Program Files\MySQL\MySQL Server 8.0\include\mysql)
- - Vá para a Parameters nas opções do projeto e no bloco Linker adicioner o texto -lmysql
+ - Incluir arquivo "libmysql.dll" na pasta do projeto, encontrado na pasta lib do MySql (ex: C:\Program Files\MySQL\MySQL Server 8.0\lib)
+ - Caso seu MySql não esteja instalado no disco padrão do windows ou você use outro sistema operacional, você deve:
+   - Pressione ctrl + h para abrir as opções do projeto e vá para Directories.
+   - Na aba de library directories adicione o caminho da pasta lib do MySQL (ex: C:\Program Files\MySQL\MySQL Server 8.0\lib)
+   - Na aba de include directories adicione os caminhos para as pastas include e include/mysql (ex: C:\Program Files\MySQL\MySQL Server 8.0\include & C:\Program Files\MySQL\MySQL Server 8.0\include\mysql)
 
 ### Como rodar
 
