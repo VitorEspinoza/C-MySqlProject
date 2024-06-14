@@ -58,9 +58,6 @@ ResponseAccount createAccount(Account account) {
 	responseAccount.success = create("Account", 5, properties[0], properties[1], properties[2], properties[3], properties[4]);
 	
 	responseAccount.account = account;
-
-	clearBuffer();
-	getchar();
 	
 	return responseAccount;
 }
