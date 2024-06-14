@@ -297,7 +297,6 @@ void loginAccountScreen(Client client) {
 	int isNumAccountNull;
 	setDefaultColorTextConsole();
 	system("cls");
-	
 	printf("====================================\n");
 	printf("=            Fazer Login           =\n");
 	printf("====================================\n");
@@ -325,6 +324,7 @@ void loginAccountScreen(Client client) {
 			printf("=    Numero de Conta inexistente.  =\n");
 			printf("=    Tente novamente.               =\n");
 			printf("====================================\n");
+			setDefaultColorTextConsole();
 		} else {
 			if(account.active == 0)
 			{
@@ -379,10 +379,12 @@ void loginAccountScreen(Client client) {
 				int attempts = 0;
 				
 				do{
-					setDefaultColorTextConsole();
 					printf("Digite sua senha: ");
 					scanf("%s", &password);
 					
+					if (strcmp(password, "0") == 0)
+    					loginOptionAccountScreen(client);
+    				
 					success = strcmp(account.password, password) == 0;
 					
 					if(success) {
@@ -393,6 +395,8 @@ void loginAccountScreen(Client client) {
 						printf("=====================================\n");
 						printf("= Senha incorreta. Tente Novamente. =\n");
 						printf("=====================================\n");
+						setDefaultColorTextConsole();
+						printf("(0 - sair)\n");
 					}
 					
 					attempts++;

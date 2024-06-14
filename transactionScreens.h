@@ -90,6 +90,10 @@ void realizeTransaction(Account* account) {
 	        setDefaultColorTextConsole();
 	        printf("Por favor, digite um n�mero de conta: ");
 	        scanf("%s", transaction.targetAccount);
+
+			if(strcmp(transaction.targetAccount, "0") == 0){
+    			transactionMenuScreen(account);
+			}
 	    }
 	    
 	    while (!isTargetAccountReal(transaction.targetAccount)) {
@@ -98,6 +102,10 @@ void realizeTransaction(Account* account) {
 	        setDefaultColorTextConsole();
 	        printf("Por favor, um n�mero de conta existente: ");
 	        scanf("%s", &transaction.targetAccount);
+
+			if(strcmp(transaction.targetAccount, "0") == 0){
+    			transactionMenuScreen(account);
+			}
 	    }
 	    
 	    while (strcmp(transaction.targetAccount, account->accountNumber) == 0) {
@@ -106,7 +114,10 @@ void realizeTransaction(Account* account) {
 	        printf("Tente novamente\n");
 	        setDefaultColorTextConsole();
 	        printf("Por favor, digite um n�mero de conta: ");
-	        scanf("%s", transaction.targetAccount);     
+	        scanf("%s", transaction.targetAccount);  
+			if(strcmp(transaction.targetAccount, "0") == 0){
+    			transactionMenuScreen(account);
+			}   
 	    }
 	   
 	    printf("Tipo pagamento (0 - Credito, 1 - Debito): ");
@@ -153,6 +164,14 @@ void realizeTransaction(Account* account) {
     	getchar();
 
 		infoAccountScreen();
+	} else {
+		setErrorColorTextConsole();
+		printf("Saldo insuficiente!\n");
+		setDefaultColorTextConsole();
+		printf("Aperte enter para continuar.");
+		clearBuffer();
+		getchar();
+		transactionMenuScreen(account);
 	}
 }
 
