@@ -56,7 +56,7 @@ void fillTransaction(void* structToFill, MYSQL_ROW row) {
 ResponseTransactions readAllTransactions(char* accountNumber) {
 	char whereClause[50];
 
-	sprintf(whereClause, "WHERE fk_account_accountNumber = %s", accountNumber);
+	sprintf(whereClause, "WHERE fk_account_accountNumber = %s OR target_account = %s", accountNumber, accountNumber);
 
 	ResponseTransactions responseTransactions;
 
