@@ -9,7 +9,7 @@ void configMenuScreen(Account* account) {
 	int option;
 	system("cls");
 	printf("====================================\n");
-    printf("=       Configurações de Conta     =\n");
+    printf("=       Configuraï¿½ï¿½es de Conta     =\n");
     printf("====================================\n");
     
 	do {	
@@ -32,7 +32,7 @@ void configMenuScreen(Account* account) {
 	    		break;
 	    	default:
 	    		setErrorColorTextConsole();
-	    		printf("Opção inválida. Tente novamente.\n");
+	    		printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
 	    		setDefaultColorTextConsole();
 		}
 		
@@ -90,7 +90,7 @@ void changePasswordScreen(Account* account) {
 		            infoAccountScreen();
 		        } else {
 		        	setErrorColorTextConsole();
-		        	printf("As senhas não são iguais. Tente novamente!\n");
+		        	printf("As senhas nï¿½o sï¿½o iguais. Tente novamente!\n");
 		        	setDefaultColorTextConsole();
 				}
 		        
@@ -98,7 +98,7 @@ void changePasswordScreen(Account* account) {
 	        
         } else if (attempts == 3) {
 	    	setErrorColorTextConsole();
-	    	printf("Número de tentativas excedido.\n");
+	    	printf("Nï¿½mero de tentativas excedido.\n");
 			setDefaultColorTextConsole();
 	    	printf("Aperte enter para voltar");
 	    	clearBuffer();
@@ -133,7 +133,7 @@ void deleteAccountScreen(Account* account){
     
     do{    
 		printf("1. Sim\n");
-	    printf("2. NÃ£o\n");
+	    printf("2. Nï¿½o\n");
 	    scanf("%d", &option);
 	    getchar();
     	switch(option){
@@ -152,7 +152,7 @@ void deleteAccountScreen(Account* account){
 			            system("cls");
 			            setSuccessColorTextConsole();
 			            printf("====================================\n");
-			            printf("=    Account excluida com sucesso.   =\n");
+			            printf("=    Conta excluida com sucesso.   =\n");
 			            printf("====================================\n");
 			            printf("Aperte enter para continuar.");
 			            clearBuffer();
@@ -168,7 +168,7 @@ void deleteAccountScreen(Account* account){
     			break;
     		default:
     			setErrorColorTextConsole();
-    			printf("OpÃ§Ã£o invÃ¡lida. Tente novamente.\n");
+    			printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
     			setWarningColorTextConsole();
 		}
 	}while(option != 1 && option != 2);

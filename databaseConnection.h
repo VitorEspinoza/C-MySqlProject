@@ -8,7 +8,7 @@
 
 char HOST[] = "localhost";
 char USER[] = "root";
-char PASS[] = "csharppass31";
+char PASS[] = "BancodeDados11@10";
 MYSQL* mySqlInstance;
 
 
