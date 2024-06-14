@@ -132,7 +132,7 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
 
                 count++;
             }
-            array = realloc(array, (count + 1) * sizeof(void*)); // Aloca espa�o para o �ltimo elemento
+            array = realloc(array, (count + 1) * sizeof(void*));
 			array[count] = NULL;
             *numberOfRows = count;
             mysql_free_result(result);
