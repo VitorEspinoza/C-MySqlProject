@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit1]
-FileName=agencia.h
+FileName=agency.h
 CompileCpp=0
 Folder=TrabFinalLingProg
 Compile=1
@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=cliente.h
+FileName=client.h
 CompileCpp=0
 Folder=TrabFinalLingProg
 Compile=1
@@ -71,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=clienteController.h
+FileName=clientController.h
 CompileCpp=0
 Folder=TrabFinalLingProg
 Compile=1
@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=conta.h
+FileName=account.h
 CompileCpp=0
 Folder=TrabFinalLingProg
 Compile=1
@@ -121,7 +121,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=transacao.h
+FileName=transaction.h
 CompileCpp=0
 Folder=TrabFinalLingProg
 Compile=1
@@ -131,7 +131,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=contaController.h
+FileName=accountController.h
 CompileCpp=0
 Folder=
 Compile=1
@@ -180,3 +180,32 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit14]
+FileName=consoleUtils.h
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=transactionController.h
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=transactionScreens.h
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=

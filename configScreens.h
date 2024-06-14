@@ -9,7 +9,7 @@ void configMenuScreen(Account* account) {
 	int option;
 	system("cls");
 	printf("====================================\n");
-    printf("=       Configurações de Conta     =\n");
+    printf("=       Configuraï¿½ï¿½es de Conta     =\n");
     printf("====================================\n");
     
 	do {	
@@ -32,7 +32,7 @@ void configMenuScreen(Account* account) {
 	    		break;
 	    	default:
 	    		setErrorColorTextConsole();
-	    		printf("Opção inválida. Tente novamente.\n");
+	    		printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
 	    		setDefaultColorTextConsole();
 		}
 		
@@ -50,10 +50,15 @@ void changePasswordScreen(Account* account) {
     printf("====================================\n");
     printf("=             Trocar Senha         =\n");
     printf("====================================\n");
-
+	printf("(0 - sair)\n");
 	do {    
 		printf("Digite sua senha atual: ");
 	    scanf("%s", oldPassword);
+	    
+	    if (strcmp(oldPassword, "0") == 0){
+	    	configMenuScreen(account);
+		}
+		
 		attempts++;
 	    isPasswordCorrect = strcmp(oldPassword, account->password) == 0;
 	    
@@ -85,7 +90,7 @@ void changePasswordScreen(Account* account) {
 		            infoAccountScreen();
 		        } else {
 		        	setErrorColorTextConsole();
-		        	printf("As senhas não são iguais. Tente novamente!\n");
+		        	printf("As senhas nï¿½o sï¿½o iguais. Tente novamente!\n");
 		        	setDefaultColorTextConsole();
 				}
 		        
@@ -93,7 +98,7 @@ void changePasswordScreen(Account* account) {
 	        
         } else if (attempts == 3) {
 	    	setErrorColorTextConsole();
-	    	printf("Número de tentativas excedido.\n");
+	    	printf("Nï¿½mero de tentativas excedido.\n");
 			setDefaultColorTextConsole();
 	    	printf("Aperte enter para voltar");
 	    	clearBuffer();
@@ -116,7 +121,7 @@ void changePasswordScreen(Account* account) {
 void deleteAccountScreen(Account* account){
 	int option;
 	int success;
-	int password[100];
+	char password[100];
 	int isPasswordCorrect;
 	
 	
@@ -128,18 +133,19 @@ void deleteAccountScreen(Account* account){
     
     do{    
 		printf("1. Sim\n");
-	    printf("2. Não\n");
+	    printf("2. Nï¿½o\n");
 	    scanf("%d", &option);
 	    getchar();
     	switch(option){
     		case 1:
     			printf("Senha: ");
-    			scanf("%s", password);
+    			scanf("%s", &password);
     			
     			isPasswordCorrect = strcmp(account->password, password) == 0;
     			
     			if (isPasswordCorrect){ 
-    				Property numAccountProp = setProperty("accountNumber", "string", account->accountNumber);
+    				
+    				Property numAccountProp = setProperty("accountnumber", "string", account->accountNumber);
 					success = deleteAccount(numAccountProp);
 	    			
 	    			if (success) {
@@ -157,11 +163,12 @@ void deleteAccountScreen(Account* account){
 				}
 				break;
     		case 2:
-    			infoAccountScreen();
+    			setDefaultColorTextConsole();
+    			configMenuScreen(account);
     			break;
     		default:
     			setErrorColorTextConsole();
-    			printf("Opção inválida. Tente novamente.\n");
+    			printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
     			setWarningColorTextConsole();
 		}
 	}while(option != 1 && option != 2);

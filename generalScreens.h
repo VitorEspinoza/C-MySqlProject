@@ -1,5 +1,6 @@
 void initialScreen();
 void initialScreen() {
+	system("cls");
 	setDefaultColorTextConsole();
 	printf("====================================\n");
     printf("=           Tela Inicial           =\n");

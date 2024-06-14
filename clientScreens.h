@@ -40,21 +40,26 @@ typedef int (*ValidatorFunc)(const char*);
 
 void readDocument(char* document, int size, ValidatorFunc validator, const char* documentName, int onlyNumbers) {
     int valid = 0;
-
+    
     while (!valid) {
     	setDefaultColorTextConsole();
     	
     	if(onlyNumbers)
-        	printf("Digite o %s (somente números): ", documentName);
+        	printf("Digite o %s (somente nï¿½meros): ", documentName);
         else
         	printf("Digite o %s: ", documentName);
         	
         scanf("%s", document);
+        
+        if(strcmp(document, "0") == 0) {
+    		initialScreen();
+		}
+		
         if (validator(document)) {
             valid = 1;
         } else {
         	setErrorColorTextConsole();
-            printf("%s inválido! Digite novamente.\n", documentName);
+            printf("%s invï¿½lido! Digite novamente.\n", documentName);
         }
     }
 }
@@ -64,8 +69,7 @@ void createClientScreen() {
     printf("====================================\n");
     printf("=        Cadastro de Cliente       =\n");
     printf("====================================\n");
-
-	
+	printf("(0 - sair)\n");
     clearBuffer();
     
   	char cpf[12];
@@ -78,7 +82,7 @@ void createClientScreen() {
 	if(alreadyExistClient != NULL) {
 		system("cls");
 		setWarningColorTextConsole();
-		printf("Parece que você já tem uma conta, vamos te redirecionar ao login, clique enter para continuar: ");
+		printf("Parece que vocï¿½ jï¿½ tem uma conta, vamos te redirecionar ao login, clique enter para continuar: ");
 		clearBuffer();
 		getchar();
 		clientInfoScreen(0);
@@ -95,10 +99,10 @@ void createClientScreen() {
     printf("Digite o nome: ");
     readInput(client.name, NAME_SIZE);
 
-    printf("Digite o endereço: ");
+    printf("Digite o endereï¿½o: ");
     readInput(client.address, ADDRESS_SIZE);
 
-    printf("\nDigite o telefone (Somente números): ");
+    printf("\nDigite o telefone (Somente nï¿½meros): ");
     readInput(client.phone, PHONE_SIZE);
 
 	printf("Digite o estado civil (1 - Solteiro, 2 - Casado): ");	
@@ -107,7 +111,7 @@ void createClientScreen() {
 	clearBuffer();
 	
 	while(maritalStatus != 1 && maritalStatus != 2) {
-	    printf("Por favor, digite um valor válido.");
+	    printf("Por favor, digite um valor vï¿½lido.");
 	    printf("Estado civil (1 - Solteiro, 2 - Casado): ");
 	    scanf("%d", &maritalStatus);
 	    clearBuffer();
@@ -122,7 +126,7 @@ void createClientScreen() {
     	setSuccessColorTextConsole();
     	system("cls");
        	printf("===============================================\n");
-	    printf("=   Você é oficialmente um cliente nosso :)   =\n");
+	    printf("=   Vocï¿½ ï¿½ oficialmente um cliente nosso :)   =\n");
 	    printf("===============================================\n");
         clientInfoScreen(true);
     }
@@ -152,16 +156,22 @@ void clientInfoScreen(int haveData) {
 		Client* alreadyExistClient;
 		do {
 			setDefaultColorTextConsole();
+			printf("(0 - sair)\n");
 			printf("Por favor, digite o seu CPF para que possamos te identificar: ");
 			char cpf[11];
 			scanf("%s", &cpf);
 			clearBuffer();
+
+			if(strcmp(cpf, "0") == 0){
+				system("cls");
+				initialScreen();
+			}
 			Property cpfProp = setProperty("cpf", "string", cpf);
 			alreadyExistClient = clientAlreadyExists(cpfProp);
 			
 			if(alreadyExistClient == NULL){
 				setErrorColorTextConsole();
-				printf("CPF não cadastrado na base, tente novamente.\n\n");
+				printf("CPF nï¿½o cadastrado na base, tente novamente.\n\n");
 			}
 			else {
 				system("cls");
@@ -176,12 +186,12 @@ void clientInfoScreen(int haveData) {
 	
     setDetachColorTextConsole();
     printf("\n\nSeja bem vindo, %s!\n", client.name);
-	printf("Informações do seu cadastro:\n\n");
+	printf("Informaï¿½ï¿½es do seu cadastro:\n\n");
 	setDefaultColorTextConsole();
 	printf("CPF: %s\n", client.cpf);
 	printf("RG: %s\n", client.rg);
 	printf("Nome: %s\n", client.name);
-	printf("endereço: %s\n", client.address);
+	printf("endereï¿½o: %s\n", client.address);
 	printf("Telefone: %s\n", formatPhoneNumber(client.phone));
 	printf("Estado Civil: %s\n", client.maritalStatus == Single ? "Solteiro" : "Casado");
 	
@@ -190,9 +200,10 @@ void clientInfoScreen(int haveData) {
 	do {
 	
 			printf("Selecione como deseja prosseguir: \n");
-			printf("1. Fazer login na conta e realizar transações\n");
-			printf("2. Editar as informações atuais\n");
+			printf("1. Fazer login na conta e realizar transaï¿½ï¿½es\n");
+			printf("2. Editar as informaï¿½ï¿½es atuais\n");
 			printf("3. Excluir meu cadastro\n");
+			printf("4. Voltar\n");
 			
 			scanf("%d", &option);
 			getchar();
@@ -207,9 +218,12 @@ void clientInfoScreen(int haveData) {
 			    case 3:
 			        deleteClientScreen(0);
 			        break;
+			    case 4:
+			    	initialScreen();
+			    	break;
 			    default:
             	setErrorColorTextConsole();
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
                 setDefaultColorTextConsole();
 			}
 		}
@@ -231,11 +245,11 @@ void updateClientScreen() {
         printf("1. Editar CPF\n");
         printf("2. Editar RG\n");
         printf("3. Editar nome\n");
-        printf("4. Editar endereço\n");
+        printf("4. Editar endereï¿½o\n");
         printf("5. Editar telefone\n");
         printf("6. Editar estado civil\n");
         printf("7. Finalizar\n");
-        printf("\nSelecione a opção desejada: ");
+        printf("\nSelecione a opï¿½ï¿½o desejada: ");
 		scanf("%d", &option);
 		getchar();
 
@@ -260,13 +274,13 @@ void updateClientScreen() {
                 readInput(client.name, NAME_SIZE);
                 break;
             case 4:
-                printf("endereço atual: %s\n", client.address);
-                printf("\nDigite o novo endereço: ");
+                printf("endereï¿½o atual: %s\n", client.address);
+                printf("\nDigite o novo endereï¿½o: ");
                 readInput(client.address, ADDRESS_SIZE);
                 break;
             case 5:
                 printf("Telefone atual: %s\n", formatPhoneNumber(client.phone));
-                printf("\nDigite o novo telefone (Somente números): ");
+                printf("\nDigite o novo telefone (Somente nï¿½meros): ");
                 readInput(client.phone, PHONE_SIZE);
                 break;
             case 6:
@@ -277,7 +291,7 @@ void updateClientScreen() {
 				scanf("%d", &maritalStatus);
 				clearBuffer();		
 				while(maritalStatus != 1 && maritalStatus != 2) {
-				    printf("Por favor, digite um valor válido.");
+				    printf("Por favor, digite um valor vï¿½lido.");
 				    printf("Estado civil (1 - Solteiro, 2 - Casado): ");
 				    scanf("%d", &maritalStatus);
 				    clearBuffer();
@@ -289,7 +303,7 @@ void updateClientScreen() {
                 break;
             default:
             	setErrorColorTextConsole();
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
                 setDefaultColorTextConsole();
         }
     } while(option != 7);
@@ -321,17 +335,17 @@ void deleteClientScreen(int haveData) {
 		system("cls");
 	setDefaultColorTextConsole();
 	printf("====================================\n");
-    printf("=       Exclusão de cadastro       =\n");
+    printf("=       Exclusï¿½o de cadastro       =\n");
     printf("====================================\n");
     
     setWarningColorTextConsole();
     printf("Tem certeza que deseja excluir seu cadastro?\n");
-    printf("Seus dados e informações serão perdidos.\n");
+    printf("Seus dados e informaï¿½ï¿½es serï¿½o perdidos.\n");
    	setDefaultColorTextConsole();
     int option;
     	
     do {
-		printf("\nSelecione a Opção desejada:\n\n");
+		printf("\nSelecione a Opï¿½ï¿½o desejada:\n\n");
 		printf("1. Excluir cadastro\n");
 		printf("2. Retornar ao menu\n");
 		
@@ -341,7 +355,7 @@ void deleteClientScreen(int haveData) {
 		
     	 switch(option) {
             case 1:     
-                printf("Confirme o seu cpf para prosseguir com a exclusão: ");
+                printf("Confirme o seu cpf para prosseguir com a exclusï¿½o: ");
                 char confirmCpf[12];
                 fgets(confirmCpf, 12, stdin);
                 confirmCpf[strcspn(confirmCpf, "\n")] = 0; 
@@ -357,7 +371,7 @@ void deleteClientScreen(int haveData) {
 						setSuccessColorTextConsole();
 						system("cls");
 						printf("====================================\n");
-						printf("=     Seu cadastro foi excluído    =\n");
+						printf("=     Seu cadastro foi excluï¿½do    =\n");
           				printf("====================================\n");
         
           				initialScreen(1);
@@ -375,19 +389,20 @@ void deleteClientScreen(int haveData) {
 				}
           		else {
           			setErrorColorTextConsole();
-          			printf("Cpf digitado inválido.\n");
+          			printf("Cpf digitado invï¿½lido.\n");
           			printf("====================================\n");
           			
           			deleteClientScreen(1);
 				}
                 break;
             case 2:
-                clientInfoScreen(0);
+            	system("cls");
+                clientInfoScreen(1);
                 break;
            
             default:
             	setErrorColorTextConsole();
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
                 setDefaultColorTextConsole();
                 break;
         }
