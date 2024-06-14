@@ -29,8 +29,8 @@ PaymentType stringToPaymentType(char* str) {
 
 const char* PaymentTypeToString(PaymentType paymentType) {
     switch (paymentType) {
-        case 0: return "Credito";
-        case 1: return "Debito";
+        case 0: return "Credit";
+        case 1: return "Debit";
         default: return "Forma de pagamento desconhecida";
 	}
 }

@@ -128,7 +128,7 @@ void deleteAccountScreen(Account* account){
     
     do{    
 		printf("1. Sim\n");
-	    printf("2. N√£o\n");
+	    printf("2. N„o\n");
 	    scanf("%d", &option);
 	    getchar();
     	switch(option){
@@ -139,14 +139,14 @@ void deleteAccountScreen(Account* account){
     			isPasswordCorrect = strcmp(account->password, password) == 0;
     			
     			if (isPasswordCorrect){ 
-    			
+    				Property numAccountProp = setProperty("accountNumber", "string", account->accountNumber);
 					success = deleteAccount(numAccountProp);
 	    			
 	    			if (success) {
 			            system("cls");
 			            setSuccessColorTextConsole();
 			            printf("====================================\n");
-			            printf("=    Account excluida com sucesso.   =\n");
+			            printf("=    Conta excluida com sucesso.   =\n");
 			            printf("====================================\n");
 			            printf("Aperte enter para continuar.");
 			            clearBuffer();
@@ -161,7 +161,7 @@ void deleteAccountScreen(Account* account){
     			break;
     		default:
     			setErrorColorTextConsole();
-    			printf("Op√ß√£o inv√°lida. Tente novamente.\n");
+    			printf("OpÁ„o inv·lida. Tente novamente.\n");
     			setWarningColorTextConsole();
 		}
 	}while(option != 1 && option != 2);

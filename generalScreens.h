@@ -6,7 +6,7 @@ void initialScreen() {
     printf("====================================\n");
 	char response;
 	
-	printf("Você já tem uma conta? (S/N): ");
+	printf("Você já é cliente? (S/N): ");
 	
 	do {
     scanf(" %c", &response);
