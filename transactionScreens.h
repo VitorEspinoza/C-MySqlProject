@@ -179,11 +179,12 @@ void consultBalance(Account account){
     int i;
 	char numAccountString[50];
 	int option;
+	int isTransactionReceived;
 	strcpy(numAccountString, account.accountNumber);
 				
 	ResponseTransactions responseTransactions;				
 	responseTransactions = readAllTransactions(numAccountString);
-	
+	printf("\ntestando após readAllTransactions\n");
 	system("cls");
 	printf("====================================\n");
 	printf("=      Histï¿½rico de Transaï¿½ï¿½es     =\n");
@@ -193,11 +194,29 @@ void consultBalance(Account account){
 		printf("Vocï¿½ ainda nï¿½o fez transaï¿½ï¿½es.\n");
 	} else {
 		for (i=0; responseTransactions.transactions[i] != NULL; i++) {
-			printf("\n--------------------------------------------\n");
-			printf("Data: %s  Hora: %s\n", responseTransactions.transactions[i]->date, responseTransactions.transactions[i]->hour);
-			printf("Valor: %.2f  Tipo de pagamento: %so\n", responseTransactions.transactions[i]->amount, PaymentTypeToString(responseTransactions.transactions[i]->paymentType));
-			printf("Conta destino: %s", responseTransactions.transactions[i]->targetAccount);
-			printf("\n--------------------------------------------\n");
+			
+			isTransactionReceived = strcmp(responseTransactions.transactions[i]->targetAccount, account.accountNumber) == 0;
+			
+			if (isTransactionReceived){
+				printf("\n--------------------------------------------\n");
+				printf("Data: %s  Hora: %s\n", responseTransactions.transactions[i]->date, responseTransactions.transactions[i]->hour);
+				setSuccessColorTextConsole();
+				printf("Valor: +%.2f", responseTransactions.transactions[i]->amount);
+				setDefaultColorTextConsole();
+				printf("  Tipo de pagamento: %so\n", PaymentTypeToString(responseTransactions.transactions[i]->paymentType));
+				printf("Transferido por: %s", responseTransactions.transactions[i]->accountNumber);
+				printf("\n--------------------------------------------\n");
+			} else {
+				printf("\n--------------------------------------------\n");
+				printf("Data: %s  Hora: %s\n", responseTransactions.transactions[i]->date, responseTransactions.transactions[i]->hour);
+				setErrorColorTextConsole();
+				printf("Valor: -%.2f", responseTransactions.transactions[i]->amount);
+				setDefaultColorTextConsole();
+				printf("  Tipo de pagamento: %so\n", PaymentTypeToString(responseTransactions.transactions[i]->paymentType));
+				printf("Transferido para: %s", responseTransactions.transactions[i]->targetAccount);
+				printf("\n--------------------------------------------\n");
+			}
+
 		}
 	}
 	setDefaultColorTextConsole();
