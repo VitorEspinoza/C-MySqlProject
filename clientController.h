@@ -4,15 +4,21 @@
 #include "client.h"
 #include "databaseController.h"
 
+
+typedef struct {
+	int numberOfRows;
+	Client** clients;
+}ResponseReadAllClients;
+
 void fillClient(void* structToFill, MYSQL_ROW row);
 MaritalStatus stringToMaritalStatus(char* str);
-
+void freeClients(ResponseReadAllClients* response);
 
 Property* setPropertiesClient(Client client) {
     char convertedMaritalStatus[10];
     strcpy(convertedMaritalStatus, MaritalStatusToString(client.maritalStatus));
 
-    static Property properties[7];
+    static Property properties[6];
 
     properties[0] = setProperty("rg", "string", client.rg);
     properties[1] = setProperty("cpf", "string", client.cpf);
@@ -20,7 +26,7 @@ Property* setPropertiesClient(Client client) {
     properties[3] = setProperty("address", "string", client.address);
     properties[4] = setProperty("phone", "string", client.phone);
     properties[5] = setProperty("maritalStatus", "string", convertedMaritalStatus);
-
+   
     return properties;
 }
 
@@ -54,6 +60,7 @@ void fillClient(void* structToFill, MYSQL_ROW row) {
     if (row[4] != NULL) strcpy(client->address, row[4]);
     if (row[5] != NULL) strcpy(client->phone, row[5]);
     if (row[6] != NULL) client->maritalStatus = stringToMaritalStatus(row[6]);
+    if (row[7] != NULL) client->active = atoi(row[7]);
 }
 
 
@@ -76,6 +83,7 @@ Client readClientByField(Property property) {
 	strcpy(client.address, row[4]); 
 	strcpy(client.phone, row[5]); 
 	client.maritalStatus = stringToMaritalStatus(row[6]);
+	client.active = atoi(row[6]);
 	clearResult();
 	return client;
 }
@@ -94,9 +102,43 @@ int updateClient(Client client, Property identifierField) {
 
 
 int deleteClient(Property identifierField) {
-	int success = deleteRegister("client", identifierField);
+	Property activeClientProp = setProperty("active", "int", "0");
+	int success = update("client", identifierField, 1, activeClientProp);
 	return success;
 }
+
+Client* clientAlreadyExists(Property identifierField) {
+	char whereClause[70];
+	
+	ResponseReadAllClients response;
+	
+	sprintf(whereClause, "WHERE %s = %s", identifierField.Name, identifierField.Value);
+	
+	response.clients = (Client**)readAll("client", fillClient, sizeof(Client), whereClause, &(response.numberOfRows));
+	
+	Client* client = NULL;
+	
+	int i;
+	for (i=0; response.clients[i] != NULL; i++) {
+	    if(response.clients[i]->active == 1) {
+	        client = malloc(sizeof(Client));
+	        *client = *response.clients[i];
+	        break;  
+	    }
+	}
+		
+	freeClients(&response);	
+	return client;
+}
+
+void freeClients(ResponseReadAllClients* response) {
+	int i = 0;
+    for (i; i < response->numberOfRows; i++) {
+        free(response->clients[i]);
+    }
+    free(response->clients);
+}
+
 
 
 

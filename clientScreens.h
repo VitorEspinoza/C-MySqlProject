@@ -76,6 +76,19 @@ void createClientScreen() {
     readDocument(cpf, sizeof(cpf), isValidCpf, "CPF", 1);
     strcpy(client.cpf, cpf);
     
+    Property cpfProp = setProperty("cpf", "string", cpf);
+	Client* alreadyExistClient = clientAlreadyExists(cpfProp);
+	
+	if(alreadyExistClient != NULL) {
+		system("cls");
+		setWarningColorTextConsole();
+		printf("Parece que voc� j� tem uma conta, vamos te redirecionar ao login, clique enter para continuar: ");
+		clearBuffer();
+		getchar();
+		clientInfoScreen(0);
+	}
+	
+	free(alreadyExistClient);
     clearBuffer();
     
     char rg[13];
@@ -140,35 +153,35 @@ void clientInfoScreen(int haveData) {
 	
 	if(!haveData) 
 	{
-		int result;
+		Client* alreadyExistClient;
 		do {
 			setDefaultColorTextConsole();
-			int c;
-			while ((c = getchar()) != '\n' && c != EOF) {}
 			printf("(0 - sair)\n");
 			printf("Por favor, digite o seu CPF para que possamos te identificar: ");
 			char cpf[11];
 			scanf("%s", &cpf);
-			
+			clearBuffer();
+
 			if(strcmp(cpf, "0") == 0){
 				system("cls");
 				initialScreen();
 			}
-			
 			Property cpfProp = setProperty("cpf", "string", cpf);
-			client = readClientByField(cpfProp);
-			result = strcmp(client.rg, "NULL");
-		
-			if(result == 0){
+			alreadyExistClient = clientAlreadyExists(cpfProp);
+			
+			if(alreadyExistClient == NULL){
 				setErrorColorTextConsole();
 				printf("CPF n�o cadastrado na base, tente novamente.\n\n");
 			}
 			else {
 				system("cls");
+				client = *alreadyExistClient;
 				printInitialMenuHeader();
 			}
 		}
-		while(result == 0);
+		while(alreadyExistClient == NULL);
+		
+		free(alreadyExistClient);
 	}
 	
     setDetachColorTextConsole();
