@@ -38,9 +38,26 @@ char* returnAttribution(Property prop) {
         return "%s = '%s'";
     
 }
+
+int executeQuery(MYSQL* mySqlInstance, const char* scriptSQL) {
+    if (mysql_ping(mySqlInstance)) {
+        printf("%s\n", mysql_error(mySqlInstance));
+        return 0;
+    }
+
+    if (mysql_query(mySqlInstance, scriptSQL)) {
+        printf("ERROR: %s\n", mysql_error(mySqlInstance));
+        rewind(stdin);
+        getchar();
+        return 0;
+    }
+
+    return 1;
+}
+
 MYSQL_RES *result;
 
-const int create(char tabela[50], int numProperties, ...) {
+const int create(char* tabela, int numProperties, ...) {
     char scriptSQL[500]; 
     sprintf(scriptSQL, "INSERT INTO %s (", tabela);
     va_list args;
@@ -49,10 +66,10 @@ const int create(char tabela[50], int numProperties, ...) {
     Property propertiesArray[numProperties];
     int i;
     for (i = 0; i < numProperties; ++i) {
-         propertiesArray[i] = va_arg(args, Property);
+        propertiesArray[i] = va_arg(args, Property);
         sprintf(scriptSQL + strlen(scriptSQL), "%s", propertiesArray[i].Name);
-
-        if (i < numProperties - 1) {
+        const isLastItem = i == numProperties - 1;
+        if (!isLastItem) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
         }
     }
@@ -60,18 +77,16 @@ const int create(char tabela[50], int numProperties, ...) {
     sprintf(scriptSQL + strlen(scriptSQL), ") VALUES (");
 
     for (i = 0; i < numProperties; ++i) {
-    	
-    	
-	char format[20];
-    if (propertieIsNumber(propertiesArray[i])) {
-       	strcpy(format, "%s");
-    } 
-    else {
-    	strcpy(format, "'%s'");
-	}
-	
-       sprintf(scriptSQL + strlen(scriptSQL), format, propertiesArray[i].Value);
-		const isLastItem = i == numProperties - 1;
+        char format[20];
+        if (propertieIsNumber(propertiesArray[i])) {
+            strcpy(format, "%s");
+        } 
+        else {
+            strcpy(format, "'%s'");
+        }
+        
+        sprintf(scriptSQL + strlen(scriptSQL), format, propertiesArray[i].Value);
+        const isLastItem = i == numProperties - 1;
         if (!isLastItem) {
             sprintf(scriptSQL + strlen(scriptSQL), ", ");
         }
@@ -80,25 +95,14 @@ const int create(char tabela[50], int numProperties, ...) {
 
     sprintf(scriptSQL + strlen(scriptSQL), ");\n");
     va_end(args);
-  	int success = 0;
-    if (mysql_ping(mySqlInstance)) {
-        printf("%s\n", mysql_error(mySqlInstance));
-    }
 
-    if (mysql_query(mySqlInstance, scriptSQL)) {
-        printf("ERROR: %s\n", mysql_error(mySqlInstance));
-        rewind(stdin);
-        getchar();
-    } else {
-        success = 1;
-    }
-                                                                        
-    return success;
+    return executeQuery(mySqlInstance, scriptSQL);                  
+
 }
 
 typedef void (*filler_func)(void*, MYSQL_ROW);
 
-void** readAll(char tableName[50], filler_func fill, size_t structSize, char* whereClause, int* numberOfRows) {
+void** readAll(char* tableName, filler_func fill, size_t structSize, char* whereClause, int* numberOfRows) {
     char scriptSQL[500];
     
     if (whereClause[0] == '\0') {
@@ -120,7 +124,7 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
     }
 
     if (mysql_query(mySqlInstance, scriptSQL) == 0) {
-        MYSQL_RES *result = mysql_store_result(mySqlInstance);
+        result = mysql_store_result(mySqlInstance);
 
         if (result) {
             MYSQL_ROW row;
@@ -129,13 +133,12 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
                 array = realloc(array, (count + 1) * sizeof(void*));
                 array[count] = malloc(structSize);
                 fill(array[count], row);
-
                 count++;
             }
             array = realloc(array, (count + 1) * sizeof(void*));
 			array[count] = NULL;
             *numberOfRows = count;
-            mysql_free_result(result);
+            clearResult();
         } else {
             printf("Erro ao obter resultados: %s\n", mysql_error(mySqlInstance));
         }
@@ -146,17 +149,17 @@ void** readAll(char tableName[50], filler_func fill, size_t structSize, char* wh
     return array;
 }
 
-MYSQL_ROW readByField(char tabela[50], Property field)
+MYSQL_ROW readByField(char* tabela, Property identifierField)
 {
 	char scriptSQL[500];
 	
 	
 	sprintf(scriptSQL, "SELECT * FROM %s", tabela);
 	
- 	char* format = returnAttribution(field);
+ 	char* format = returnAttribution(identifierField);
 	char whereClause[50];
 	sprintf(whereClause, " WHERE %s", format);
-    sprintf(scriptSQL + strlen(scriptSQL), whereClause, field.Name, field.Value);
+    sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Name, identifierField.Value);
 	 if (mysql_query(mySqlInstance, scriptSQL) == 0) {
        result = mysql_store_result(mySqlInstance);
         if (result) {
@@ -177,7 +180,7 @@ clearResult() {
 }
 
 
-int update(char tabela[50], Property identifierField, int numProperties, ...) {
+int update(char* tabela, Property identifierField, int numProperties, ...) {
 
 	char scriptSQL[500]; 
     sprintf(scriptSQL, "UPDATE %s SET ", tabela);
@@ -204,23 +207,10 @@ int update(char tabela[50], Property identifierField, int numProperties, ...) {
 	sprintf(whereClause, " WHERE %s", format);
     sprintf(scriptSQL + strlen(scriptSQL), whereClause, identifierField.Name, identifierField.Value);
 	
-	int success = 0;
-    if (mysql_ping(mySqlInstance)) {
-        printf("%s\n", mysql_error(mySqlInstance));
-    }
-
-    if (mysql_query(mySqlInstance, scriptSQL)) {
-        printf("ERROR: %s\n", mysql_error(mySqlInstance));
-        rewind(stdin);
-        getchar();
-    } else {
-        success = 1;
-    }
-    
-    return success;
+	 return executeQuery(mySqlInstance, scriptSQL);    
 }
 
-int deleteRegister(char tabela[50], Property identifierField) {
+int deleteRegister(char* tabela, Property identifierField) {
 	char scriptSQL[500];
 		
 	char* format = returnAttribution(identifierField);
@@ -228,21 +218,9 @@ int deleteRegister(char tabela[50], Property identifierField) {
 	sprintf(whereClause, format, identifierField.Name, identifierField.Value);
 
 	sprintf(scriptSQL, "DELETE FROM %s WHERE %s;", tabela, whereClause);
-	int success = 0;
-    if (mysql_ping(mySqlInstance)) {
-        printf("%s\n", mysql_error(mySqlInstance));
-    }
+	int success = 1;
 
-    if (mysql_query(mySqlInstance, scriptSQL)) {
-        printf("ERROR: %s\n", mysql_error(mySqlInstance));
-        rewind(stdin);
-        getchar();
-    } else {
-        success = 1;
-    }
-
-    
-    return success;
+    return executeQuery(mySqlInstance, scriptSQL);    
 }
 #endif
 
