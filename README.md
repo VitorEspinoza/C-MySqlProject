@@ -18,8 +18,7 @@ Projeto realizado como parte da avaliação da disciplina DS123 Lingauem de Prog
 
 ### MySQL Config
 
- - Criar um schema (nome padrão no projeto: banco)
- - Rodar o script sql para criação das tabelas e seus relacionamentos (banco.sql)
+ - Rodar o script sql para criação das tabelas e seus relacionamentos (script.sql)
 
 ### Config da biblioteca mysql com C no DEV-C++
 
@@ -39,7 +38,7 @@ Projeto realizado como parte da avaliação da disciplina DS123 Lingauem de Prog
 
  ### Configurar a conexão com o banco
  - Abrir o arquivo databaseConnection.h
- - Configurar as variáveis HOST, USER, PASS e SCHEMA de acordo com o seu banco
+ - Configurar as variáveis HOST, USER, PASS de acordo com as configurações do seu MySql
 
  ### Rodar
  - Rebuild All(f12) e run(f10)
