@@ -53,7 +53,7 @@ void fillTransaction(void* structToFill, MYSQL_ROW row) {
     if (row[5] != NULL) strcpy(transaction->hour, row[5]);
 }
 
-ResponseTransactions readAllTransactions(char * accountNumber) {
+ResponseTransactions readAllTransactions(char* accountNumber) {
 	char whereClause[50];
 
 	sprintf(whereClause, "WHERE fk_account_accountNumber = %s", accountNumber);

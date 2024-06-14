@@ -15,6 +15,7 @@ typedef struct {
     char address[40];
     char phone[12];
     MaritalStatus maritalStatus;
+    int active;
 } Client;
 
 
