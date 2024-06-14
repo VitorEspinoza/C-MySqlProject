@@ -12,10 +12,10 @@ Projeto realizado como parte da avaliação da disciplina DS123 Lingauem de Prog
 
 ### Pré-requisitos
 
- - IDE DEV-C++
- - MySQL 8.0.37
- - Connector/ODBC 8.0.32 x64 & x86
-
+ - [IDE DEV-C++](https://sourceforge.net/projects/orwelldevcpp/)
+ - [MySQL 8.0.37](https://dev.mysql.com/downloads/mysql/)
+ - [Connector/C++ 8.4.0](https://dev.mysql.com/downloads/connector/cpp/)
+ - [Open SSL](https://slproweb.com/products/Win32OpenSSL.html)
 ### MySQL Config
 
  - Rodar o script sql para criação das tabelas e seus relacionamentos (script.sql)
