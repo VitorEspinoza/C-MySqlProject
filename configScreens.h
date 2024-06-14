@@ -129,7 +129,7 @@ void deleteAccountScreen(Account* account){
 	printf("===============================================\n");
     printf("=  Tem certeza que deseja excluir sua conta?  =\n");
     printf("===============================================\n");
-
+    setDefaultColorTextConsole();
     
     do{    
 		printf("1. Sim\n");

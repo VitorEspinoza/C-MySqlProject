@@ -121,6 +121,12 @@ void createClientScreen() {
     int success = createClient(client);
     
     if(success) {
+	    Property clientCpfProp = setProperty("cpf", "string", client.cpf);
+		Client* actualClient;
+		actualClient = clientAlreadyExists(clientCpfProp);
+		client = *actualClient;
+		free(actualClient);
+		
     	setSuccessColorTextConsole();
     	system("cls");
        	printf("===============================================\n");
@@ -198,14 +204,14 @@ void clientInfoScreen(int haveData) {
 	do {
 	
 			printf("Selecione como deseja prosseguir: \n");
-			printf("1. Fazer login na conta e realizar transaï¿½ï¿½es\n");
+			printf("1. Fazer login na conta e realizar transações\n");
 			printf("2. Editar as informações atuais\n");
 			printf("3. Excluir meu cadastro\n");
 			printf("4. Voltar\n");
 			
 			scanf("%d", &option);
 			getchar();
-			
+					
 			switch(option) {
 			    case 1:
 			        loginOptionAccountScreen(client);	
