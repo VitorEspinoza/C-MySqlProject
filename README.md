@@ -31,7 +31,7 @@ Projeto realizado como parte da avaliação da disciplina DS123 Lingauem de Prog
 
  #### Abrir o projeto na IDE
  - Criar pasta destinada ao projeto
- - Clonar o projeto do github na pasta criada. git clone https://github.com/VitorEspinoza/C-MySqlProject.git
+ - Clonar o projeto do github na pasta criada. `git clone https://github.com/VitorEspinoza/C-MySqlProject.git`
  - Abrir o DEV-C++
  - File -> Open OU ctrl + o
  - Selecionar o arquivo TrabFinalLingProg.dev
