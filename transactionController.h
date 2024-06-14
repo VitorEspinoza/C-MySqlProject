@@ -63,3 +63,11 @@ ResponseTransactions readAllTransactions(char * accountNumber) {
     responseTransactions.transactions = (Transaction**)readAll("transaction", fillTransaction, sizeof(Transaction), whereClause, &(responseTransactions.numberOfRows));
 	return responseTransactions;
 }
+
+void freeTransactions(ResponseTransactions* response) {
+	int i = 0;
+    for (i; i < response->numberOfRows; i++) {
+        free(response->transactions[i]);
+    }
+    free(response->transactions);
+}

@@ -41,7 +41,6 @@ typedef int (*ValidatorFunc)(const char*);
 void readDocument(char* document, int size, ValidatorFunc validator, const char* documentName, int onlyNumbers) {
     int valid = 0;
 
-printf("rg digitado %s", document);
     while (!valid) {
     	setDefaultColorTextConsole();
     	
@@ -206,7 +205,8 @@ void clientInfoScreen(int haveData) {
 
 void updateClientScreen() {
     char buffer[40];
- 
+ 	char* oldCpf;
+ 	strcpy(oldCpf, client.cpf);
 	int option;
     do {
         system("cls");
@@ -280,7 +280,7 @@ void updateClientScreen() {
     } while(option != 7);
     system("cls");
     
-    Property cpfProp = setProperty("cpf", "string", client.cpf);
+    Property cpfProp = setProperty("cpf", "string", oldCpf);
     const success = updateClient(client, cpfProp);
     
     if(success) {
@@ -306,18 +306,18 @@ void deleteClientScreen(int haveData) {
 		system("cls");
 	setDefaultColorTextConsole();
 	printf("====================================\n");
-    printf("=         ExclusÃ£o de conta        =\n");
+    printf("=       Exclusão de cadastro       =\n");
     printf("====================================\n");
     
     setWarningColorTextConsole();
-    printf("Tem certeza que deseja excluir sua conta?\n");
+    printf("Tem certeza que deseja excluir seu cadastro?\n");
     printf("Seus dados e informações serão perdidos.\n");
    	setDefaultColorTextConsole();
     int option;
     	
     do {
 		printf("\nSelecione a Opção desejada:\n\n");
-		printf("1. Excluir conta\n");
+		printf("1. Excluir cadastro\n");
 		printf("2. Retornar ao menu\n");
 		
 		scanf("%d", &option);
@@ -326,7 +326,7 @@ void deleteClientScreen(int haveData) {
 		
     	 switch(option) {
             case 1:     
-                printf("Confirme o seu cpf para prosseguir com a exclusÃ£o: ");
+                printf("Confirme o seu cpf para prosseguir com a exclusão: ");
                 char confirmCpf[12];
                 fgets(confirmCpf, 12, stdin);
                 confirmCpf[strcspn(confirmCpf, "\n")] = 0; 
@@ -342,7 +342,7 @@ void deleteClientScreen(int haveData) {
 						setSuccessColorTextConsole();
 						system("cls");
 						printf("====================================\n");
-						printf("=      Sua conta foi excluída      =\n");
+						printf("=     Seu cadastro foi excluído    =\n");
           				printf("====================================\n");
         
           				initialScreen(1);

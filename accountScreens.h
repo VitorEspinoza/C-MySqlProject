@@ -20,7 +20,7 @@ void createAccountScreen(Client client) {
 
     printf("Digite a senha da sua conta: ");
     scanf("%s", account.password);  
-
+	readInput(account.password, 255);
     printf("\n Criando cadastro... \n");
     strcpy(account.agencyCode, "777");
 
@@ -253,21 +253,21 @@ void loginOptionAccountScreen(Client client) {
 void loginAccountScreen(Client client) {
 	char password[100];
 	int isNumAccountNull;
-	
+	setDefaultColorTextConsole();
 	system("cls");
+	
 	printf("====================================\n");
 	printf("=            Fazer Login           =\n");
 	printf("====================================\n");
 	
 	do {
-		setDefaultColorTextConsole();
 		printf("Digite o numero da sua conta: ");
 		scanf("%s", &account.accountNumber);
 		
 		Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
 		account = readAccountByField(numAccountProp);
 		
-		isNumAccountNull = strcmp(account.accountNumber, "NULL") == 0;
+		isNumAccountNull = strcmp(account.accountNumber, "NULL") == 0 || account.fk_Client_ID != client.id;
 			
 		if (isNumAccountNull) {
 			system("cls");
@@ -357,6 +357,7 @@ void loginAccountScreen(Client client) {
 					printf("=    Tente novamente mais tarde.    =\n");
 					printf("=====================================\n");
 			    	setDefaultColorTextConsole();
+			    	exit(0);
 				}
 			}
 			
