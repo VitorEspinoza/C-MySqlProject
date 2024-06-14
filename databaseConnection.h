@@ -8,7 +8,7 @@
 
 char HOST[] = "localhost";
 char USER[] = "root";
-char PASS[] = "BancodeDados11@10";
+char PASS[] = "";
 MYSQL* mySqlInstance;
 
 
@@ -38,6 +38,6 @@ int initMySqlConnection() {
 
 }
 
-#endif // DATABASECONNECTION_H
+#endif
 
 

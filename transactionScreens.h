@@ -15,13 +15,13 @@ void transactionMenuScreen(Account* account) {
 	
 	system("cls");
 	printf("====================================\n");
-    printf("=         Menu de Transaï¿½ï¿½o        =\n");
+    printf("=         Menu de Transação        =\n");
     printf("====================================\n");
 
     do{    
 		printf("Escolha o que deseja fazer:\n");
-	    printf("1. Realizar transaï¿½ï¿½o\n");
-	    printf("2. Consultar transaï¿½ï¿½es\n");
+	    printf("1. Realizar transação\n");
+	    printf("2. Consultar transações\n");
 	    printf("3. Voltar\n");
 	    printf("Digite sua escolha: ");
 	    scanf("%d", &option);
@@ -39,7 +39,7 @@ void transactionMenuScreen(Account* account) {
     			break;
     		default:
     			setErrorColorTextConsole();
-    			printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
+    			printf("Opção inválida. Tente novamente.\n");
     			setDefaultColorTextConsole();
     			break;
 		}
@@ -53,13 +53,13 @@ void realizeTransaction(Account* account) {
 	
 	system("cls");
 	printf("====================================\n");
-    printf("=             Transaï¿½ï¿½o           =\n");
+    printf("=             transação           =\n");
     printf("====================================\n");
     printf("(0 - sair)\n");
     strcpy(transaction.accountNumber, account->accountNumber);
 			    
 	printf("Saldo atual: R$ %.2f\n", account->balance);
-    printf("Digite o valor da transaï¿½ï¿½o: R$ ");
+    printf("Digite o valor da transação: R$ ");
     scanf("%s", str);
     
     if(strcmp(str, "0") == 0){
@@ -68,9 +68,9 @@ void realizeTransaction(Account* account) {
     
     while (!isNumber(str)) {
     	setErrorColorTextConsole();
-        printf("Entrada invï¿½lida!\n");
+        printf("Entrada inválida!\n");
         setDefaultColorTextConsole();
-        printf("Por favor, digite um nï¿½mero: R$");
+        printf("Por favor, digite um número: R$");
         scanf("%s", str);
     }
     value = atof(str);
@@ -81,14 +81,14 @@ void realizeTransaction(Account* account) {
     
     if (isSufficientBalance) {
     	
-		printf("Digite o numero da conta destino da transaï¿½ï¿½o: ");
+		printf("Digite o numero da conta destino da transação: ");
 	    scanf("%s", &transaction.targetAccount);
 	    
 	    while (!isNumber(transaction.targetAccount)) {
 	    	setErrorColorTextConsole();
-	        printf("Entrada invï¿½lida!\n");
+	        printf("Entrada inválida!\n");
 	        setDefaultColorTextConsole();
-	        printf("Por favor, digite um nï¿½mero de conta: ");
+	        printf("Por favor, digite um número de conta: ");
 	        scanf("%s", transaction.targetAccount);
 
 			if(strcmp(transaction.targetAccount, "0") == 0){
@@ -100,7 +100,7 @@ void realizeTransaction(Account* account) {
 	    	setErrorColorTextConsole();
 	        printf("Conta destino inexistente!\n");
 	        setDefaultColorTextConsole();
-	        printf("Por favor, um nï¿½mero de conta existente: ");
+	        printf("Por favor, um número de conta existente: ");
 	        scanf("%s", &transaction.targetAccount);
 
 			if(strcmp(transaction.targetAccount, "0") == 0){
@@ -110,10 +110,10 @@ void realizeTransaction(Account* account) {
 	    
 	    while (strcmp(transaction.targetAccount, account->accountNumber) == 0) {
 			setErrorColorTextConsole();
-	        printf("Vocï¿½ nï¿½o pode realizar uma auto transaï¿½ï¿½o!\n");
+	        printf("Você não pode realizar uma auto transação!\n");
 	        printf("Tente novamente\n");
 	        setDefaultColorTextConsole();
-	        printf("Por favor, digite um nï¿½mero de conta: ");
+	        printf("Por favor, digite um número de conta: ");
 	        scanf("%s", transaction.targetAccount);  
 			if(strcmp(transaction.targetAccount, "0") == 0){
     			transactionMenuScreen(account);
@@ -125,7 +125,7 @@ void realizeTransaction(Account* account) {
 		
 	    while (transaction.paymentType != 0 && transaction.paymentType != 1) {
 	    	setErrorColorTextConsole();
-	        printf("Entrada invï¿½lida!\n");
+	        printf("Entrada inválida!\n");
 	        setDefaultColorTextConsole();
 			printf("Tipo pagamento (0 - Credito, 1 - Debito): ");
 			scanf("%d", &transaction.paymentType);
@@ -157,7 +157,7 @@ void realizeTransaction(Account* account) {
 		system("cls");
 		setSuccessColorTextConsole();
 		printf("====================================\n");
-    	printf("= Transaï¿½ï¿½o realizada com sucesso! =\n");
+    	printf("= Transação realizada com sucesso! =\n");
     	printf("====================================\n");
     	printf("Aperte enter para continuar.");
     	clearBuffer();
@@ -184,14 +184,14 @@ void consultBalance(Account account){
 				
 	ResponseTransactions responseTransactions;				
 	responseTransactions = readAllTransactions(numAccountString);
-	printf("\ntestando após readAllTransactions\n");
+	
 	system("cls");
 	printf("====================================\n");
-	printf("=      Histï¿½rico de Transaï¿½ï¿½es     =\n");
+	printf("=      Histórico de transações     =\n");
 	printf("====================================\n");
 	if (responseTransactions.numberOfRows == 0) {
 		setWarningColorTextConsole();
-		printf("Vocï¿½ ainda nï¿½o fez transaï¿½ï¿½es.\n");
+		printf("Você ainda não fez transações.\n");
 	} else {
 		for (i=0; responseTransactions.transactions[i] != NULL; i++) {
 			
@@ -221,19 +221,19 @@ void consultBalance(Account account){
 	}
 	setDefaultColorTextConsole();
 	do {
-		printf("Digite 1 para voltar: ");
+		printf("Digite 0 para voltar: ");
 		scanf("%d", &option);
 		getchar();
 		
-		if (option == 1){
+		if (option == 0){
 			freeTransactions(&responseTransactions);
 			infoAccountScreen();
 		} else {
 			setErrorColorTextConsole();
-			printf("Valor invï¿½lido! Tente novamente.\n");
+			printf("Valor inválido! Tente novamente.\n");
 			setDefaultColorTextConsole();
 		};
-	}while (option != 1);
+	}while (option != 0);
 
 }
 

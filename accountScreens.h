@@ -34,7 +34,7 @@ void createAccountScreen(Client client) {
 		
 		if(!isValidPassword){
 			setErrorColorTextConsole();
-			printf("Senha muito curta, no mï¿½nimo 4 caracteres.\n");
+			printf("Senha muito curta, no mínimo 4 caracteres.\n");
 			setDefaultColorTextConsole();
 		}
 				   
@@ -62,7 +62,7 @@ void createAccountScreen(Client client) {
         setSuccessColorTextConsole(); 
         system("cls");
         printf("===============================================\n");
-        printf("=         Vocï¿½ agora possui uma conta :)      =\n");
+        printf("=         Você agora possui uma conta :)      =\n");
         printf("===============================================\n");
         printf("Aperte enter para continuar.");
         clearBuffer(); 
@@ -71,7 +71,7 @@ void createAccountScreen(Client client) {
         setErrorColorTextConsole(); 
         system("cls");
         printf("===============================================\n");
-        printf("=        Nï¿½o foi possï¿½vel criar sua conta     =\n");
+        printf("=        não foi possível criar sua conta     =\n");
         printf("===============================================\n");
         printf("Aperte enter para continuar.");
         clearBuffer(); 
@@ -88,18 +88,18 @@ void infoAccountScreen() {
 	printf("====================================\n");
 	printf("=             Menu Conta           =\n");
 	printf("====================================\n");
-	printf("Nï¿½mero da Agencia: %s\n", account.agencyCode);
-    printf("Nï¿½mero da Conta: %s\n", account.accountNumber);
+	printf("número da Agencia: %s\n", account.agencyCode);
+    printf("número da Conta: %s\n", account.accountNumber);
     printf("Saldo: R$ %.2f\n", account.balance);
         
     do {
-        printf("\nOpï¿½ï¿½es:\n");
+        printf("\nopções:\n");
         printf("1. Depositar\n");
         printf("2. Sacar\n");
-        printf("3. Transaï¿½ï¿½o\n");
-        printf("4. Configuraï¿½ï¿½es\n");
+        printf("3. Transação\n");
+        printf("4. Configurações\n");
         printf("5. Sair\n");
-        printf("Escolha uma opï¿½ï¿½es: ");
+        printf("Escolha uma opções: ");
         scanf("%d", &option);
 		getchar();
         switch (option) {
@@ -121,7 +121,7 @@ void infoAccountScreen() {
                 break;
             default:
             	setErrorColorTextConsole();
-                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.");
+                printf("Opção inválida. Tente novamente.");
                 setDefaultColorTextConsole();
         }
     } while (option != 1 && option != 2 && option != 3 && option != 4 && option != 5);
@@ -147,7 +147,7 @@ void depositAccountScreen() {
 
     while (!isNumber(str)) {
     	setErrorColorTextConsole();
-        printf("Entrada invï¿½lida!\n");
+        printf("Entrada inválida!\n");
         setDefaultColorTextConsole();
         printf("Por favor, digite um nÃºmero: R$");
         scanf("%s", str);
@@ -206,9 +206,9 @@ void withdrawAccountScreen() {
     		
 	    while (!isNumber(str)) {
 	    	setErrorColorTextConsole();
-	        printf("Entrada invï¿½lida!\n");
+	        printf("Entrada inválida!\n");
 	        setDefaultColorTextConsole();
-	        printf("Por favor, digite um nï¿½mero: R$");
+	        printf("Por favor, digite um número: R$");
 	        scanf("%s", str);
 	    }
 	    value = atof(str);
@@ -247,7 +247,7 @@ void withdrawAccountScreen() {
 				system("cls");
 		    	setErrorColorTextConsole();
 				printf("================================================\n");
-		   	 	printf("=    Oops... Erro ocorrido durante operaï¿½ï¿½o    =\n");
+		   	 	printf("=    Oops... Erro ocorrido durante operação    =\n");
 		    	printf("================================================\n");
 		    	printf("Aperte enter para continuar.");
 		    	clearBuffer();
@@ -267,10 +267,10 @@ void loginOptionAccountScreen(Client client) {
 	printf("====================================\n");
 	printf("=               Login              =\n");
 	printf("====================================\n");
-	printf("Jï¿½ possui uma CONTA para logar?\n");
+	printf("já possui uma CONTA para logar?\n");
 	do {
 
-		printf("1. Sim\n2. Nï¿½o\n3. Voltar\n");
+		printf("1. Sim\n2. não\n3. Voltar\n");
 		printf("Digite sua escolha: ");
 		
 		scanf("%d", &option);
@@ -290,7 +290,7 @@ void loginOptionAccountScreen(Client client) {
 				break;
 			default:
 				setErrorColorTextConsole();
-                printf("Opï¿½ï¿½o invï¿½lida. Tente novamente.\n");
+                printf("Opção inválida. Tente novamente.\n");
                 setDefaultColorTextConsole();
 				break;
 		}
@@ -339,7 +339,7 @@ void loginAccountScreen(Client client) {
 				printf("=          Conta desativada        =\n");
 				printf("====================================\n");
 				
-				printf("Identificamos que vocï¿½ tinha uma conta conosco mas a excluiu.\n");
+				printf("Identificamos que Você tinha uma conta conosco mas a excluiu.\n");
 				printf("Deseja recuperar sua conta? (S/N):");
 					char resposta;
 					do {
@@ -353,7 +353,7 @@ void loginAccountScreen(Client client) {
 								setSuccessColorTextConsole();
 								printf("====================================\n");
 								printf("=          Conta Recuperda         =\n");
-								printf("=       Faï¿½a o login novamente     =\n");
+								printf("=       Faça o login novamente     =\n");
 								printf("====================================\n");
 								printf("Aperte enter para continuar.");
 					            clearBuffer();
@@ -364,7 +364,7 @@ void loginAccountScreen(Client client) {
 							{
 								setErrorColorTextConsole();
 								printf("===========================================\n");
-								printf("=   Nï¿½o foi possï¿½vel recuperar sua conta  =\n");
+								printf("=   não foi possível recuperar sua conta  =\n");
 								printf("=       Tente novamente mais tarde        =\n");
 								printf("===========================================\n");
 								printf("Aperte enter para continuar.");
@@ -375,7 +375,7 @@ void loginAccountScreen(Client client) {
 					    } else if (resposta == 'N' || resposta == 'n') {
 					       	createAccountScreen(client);
 					    } else {
-					        printf("Opï¿½ï¿½o invï¿½lida. Responda com S ou N.\n");
+					        printf("Opção inválida. Responda com S ou N.\n");
 					    }
 					}	while(resposta != 'S' || resposta != 's' || resposta != 'N' || resposta != 'n');
 				
