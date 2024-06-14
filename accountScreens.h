@@ -42,16 +42,22 @@ void createAccountScreen(Client client) {
 	
 	printf("\n Criando cadastro... \n");
     strcpy(account.agencyCode, "777");
-
+	
+	Property clientCpfProp = setProperty("cpf", "string", client.cpf);
+	Client* actualClient;
+	actualClient = clientAlreadyExists(clientCpfProp);
+	client = *actualClient;
+	free(actualClient);
 	account.fk_Client_ID = client.id;
+	
+	
     account.balance = 0.00;    
 
     ResponseAccount responseAccount;
     responseAccount = createAccount(account);
 
     strcpy(account.accountNumber, responseAccount.account.accountNumber);
-    system("cls");
-	printf("Enter para continuar..");
+    
     if(responseAccount.success) {
         setSuccessColorTextConsole(); 
         system("cls");
@@ -315,8 +321,8 @@ void loginAccountScreen(Client client) {
 		Property numAccountProp = setProperty("accountNumber", "string", account.accountNumber);
 		account = readAccountByField(numAccountProp);
 		
-		isNumAccountNull = strcmp(account.accountNumber, "NULL") == 0 || account.fk_Client_ID != client.id;
-			
+		isNumAccountNull = strcmp(account.accountNumber, "NULL") != 0 && account.fk_Client_ID != client.id;
+
 		if (isNumAccountNull) {
 			system("cls");
 			setWarningColorTextConsole();
